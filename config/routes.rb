@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+
+  # home page to Trips Index page 
+  root "trips#index"
   # Routes for the Journal resource:
 
   # CREATE

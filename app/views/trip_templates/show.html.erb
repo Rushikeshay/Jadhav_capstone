@@ -40,13 +40,36 @@
 
 <hr>
 
-
 <article>
   <header>
     <h2>
       Edit trip
     </h2>
   </header>
+
+  <hr>
+  <h2>Days for this trip</h2>
+  <ul>
+    <% @the_trip.days.each do |day| %>
+      <li>
+        <a href="/days/<%= day.id %>">
+          <%= day.date %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+
+  <h3>Add a new day</h3>
+  <form action="/insert_day" method="post">
+    <input type="hidden" name="query_trip_id" value="<%= @the_trip.id %>">
+
+    <div>
+      <label for="date_box">Date</label>
+      <input type="date" id="date_box" name="query_date">
+    </div>
+
+    <button>Create day</button>
+  </form>
 
   <form action="/modify_trip/<%= @the_trip.id %>"  method="post" >
     <div>
