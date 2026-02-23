@@ -70,4 +70,40 @@ end
 
     redirect_to("/activities", { :notice => "Activity deleted successfully." } )
   end
+
+  def create
+  the_activity = Activity.new
+  the_activity.day_id = params.fetch("query_day_id")
+  the_activity.name = params.fetch("query_name")
+  address = params.fetch("query_address")
+  the_activity.address = address
+
+  # --- GEOCODING LOGIC ---
+  if address.present?
+    # We use CGI.escape to make the address URL-friendly
+    api_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{CGI.escape(address)}&key=#{ENV.fetch('GOOGLE_MAPS_API_KEY')}"
+    
+    # Make the request to Google
+    raw_response = HTTP.get(api_url)
+    parsed_data = JSON.parse(raw_response)
+    
+    if parsed_data.fetch("results").any?
+      location = parsed_data.fetch("results").at(0).fetch("geometry").fetch("location")
+      the_activity.latitude = location.fetch("lat")
+      the_activity.longitude = location.fetch("lng")
+    end
+  end
+  # --- END GEOCODING ---
+
+  the_activity.picture = params["query_picture"] if params.has_key?("query_picture")
+  the_activity.notes = params["query_notes"]
+
+  if the_activity.valid?
+    the_activity.save
+    redirect_to("/days/#{the_activity.day_id}", { :notice => "Activity created with location!" })
+  else
+    redirect_to("/days/#{the_activity.day_id}", { :alert => the_activity.errors.full_messages.to_sentence })
+  end
+end
+
 end

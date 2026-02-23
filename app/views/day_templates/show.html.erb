@@ -63,23 +63,26 @@
   </section>
 
   <section style="flex: 1; border-left: 1px solid #ccc; padding-left: 20px;">
-    <h3>Day Settings</h3>
-    <form action="/modify_day/<%= @the_day.id %>" method="post">
-      <div>
-        <label for="date_box">Date</label><br>
-        <input type="date" id="date_box" name="query_date" value="<%= @the_day.date %>">
-      </div>
+    <h3>Map</h3>
 
-      <div style="margin-top: 10px;">
-        <label for="trip_id_box">Trip ID</label><br>
-        <input type="text" id="trip_id_box" name="query_trip_id" value="<%= @the_day.trip_id %>">
-      </div>
+    <% 
+      map_markers = @the_day.activities.map do |activity|
+        { 
+          title: activity.name, 
+          lat: activity.latitude, 
+          lng: activity.longitude 
+        }
+      end 
+    %>
 
-      <button type="submit" style="margin-top: 10px;">Update Day Info</button>
-    </form>
+    <div 
+      data-controller="google-map" 
+      data-google-map-markers-value="<%= map_markers.to_json %>"
+      style="height: 400px; width: 100%; border-radius: 8px;"
+    ></div>
 
     <p style="margin-top: 20px; font-size: 0.8em; color: gray;">
-      Created <%= time_ago_in_words(@the_day.created_at) %> ago
+      Showing locations for <%= pluralize(@the_day.activities.count, "activity") %>
     </p>
   </section>
 </div>
