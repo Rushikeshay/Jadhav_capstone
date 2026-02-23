@@ -1,0 +1,99 @@
+<h1>
+  List of all activities
+</h1>
+
+<hr>
+
+<article>
+  <header>
+    <h2>
+      Add a new activity
+    </h2>
+  </header>
+
+  <form action="/insert_activity" method="post">
+    <div>
+      <label for="name_box">
+        Name
+      </label>
+
+      <input type="text" id="name_box" name="query_name">
+    </div>
+
+    <div>
+      <label for="picture_box">
+        Picture
+      </label>
+
+      <input type="text" id="picture_box" name="query_picture">
+    </div>
+
+    <div>
+      <label for="address_box">
+        Address
+      </label>
+
+      <input type="text" id="address_box" name="query_address">
+    </div>
+
+    <div>
+      <label for="notes_box">
+        Notes
+      </label>
+
+      <input type="text" id="notes_box" name="query_notes">
+    </div>
+
+    <div>
+      <label for="any_cost_box">
+        Any cost
+      </label>
+
+      <input type="text" id="any_cost_box" name="query_any_cost">
+    </div>
+
+    <div>
+      <label for="cost_box">
+        Cost
+      </label>
+
+      <input type="text" id="cost_box" name="query_cost">
+    </div>
+
+    <div>
+      <label for="picture_caption_box">
+        Picture caption
+      </label>
+
+      <input type="text" id="picture_caption_box" name="query_picture_caption">
+    </div>
+
+    <div>
+      <label for="day_id_box">
+        Day
+      </label>
+
+      <input type="text" id="day_id_box" name="query_day_id">
+    </div>
+
+    <button type="submit">
+      Create activity
+    </button>
+  </form>
+</article>
+
+<hr>
+
+<article>
+  <ul>
+    <% @list_of_activities.each do |an_activity| %>
+      <li>
+        <a href="/activities/<%= an_activity.id %>">
+          Activity #<%= an_activity.id %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+</article>
+
+<hr>

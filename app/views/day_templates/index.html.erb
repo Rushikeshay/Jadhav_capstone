@@ -1,0 +1,51 @@
+<h1>
+  List of all days
+</h1>
+
+<hr>
+
+<article>
+  <header>
+    <h2>
+      Add a new day
+    </h2>
+  </header>
+
+  <form action="/insert_day" method="post">
+    <div>
+      <label for="date_box">
+        Date
+      </label>
+
+      <input type="date" id="date_box" name="query_date">
+    </div>
+
+    <div>
+      <label for="trip_id_box">
+        Trip
+      </label>
+
+      <input type="text" id="trip_id_box" name="query_trip_id">
+    </div>
+
+    <button type="submit">
+      Create day
+    </button>
+  </form>
+</article>
+
+<hr>
+
+<article>
+  <ul>
+    <% @list_of_days.each do |a_day| %>
+      <li>
+        <a href="/days/<%= a_day.id %>">
+          Day #<%= a_day.id %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+</article>
+
+<hr>

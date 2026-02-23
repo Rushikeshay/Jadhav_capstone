@@ -1,0 +1,171 @@
+<h1>
+  Activity #<%= @the_activity.id %> details
+</h1>
+
+<article>
+  <div>
+    <a href="/activities">
+      Go back
+    </a>
+  </div>
+
+  <div>
+    <a href="/delete_activity/<%= @the_activity.id %>">
+      Delete activity
+    </a>
+  </div>
+  <dl>
+    <dt>
+      Name
+    </dt>
+    <dd>
+      <%= @the_activity.name %>
+    </dd>
+
+    <dt>
+      Picture
+    </dt>
+    <dd>
+      <%= @the_activity.picture %>
+    </dd>
+
+    <dt>
+      Address
+    </dt>
+    <dd>
+      <%= @the_activity.address %>
+    </dd>
+
+    <dt>
+      Notes
+    </dt>
+    <dd>
+      <%= @the_activity.notes %>
+    </dd>
+
+    <dt>
+      Any cost
+    </dt>
+    <dd>
+      <%= @the_activity.any_cost %>
+    </dd>
+
+    <dt>
+      Cost
+    </dt>
+    <dd>
+      <%= @the_activity.cost %>
+    </dd>
+
+    <dt>
+      Picture caption
+    </dt>
+    <dd>
+      <%= @the_activity.picture_caption %>
+    </dd>
+
+    <dt>
+      Day
+    </dt>
+    <dd>
+      <%= @the_activity.day_id %>
+    </dd>
+
+    <dt>
+      Created at
+    </dt>
+    <dd>
+      <%= time_ago_in_words(@the_activity.created_at) %> ago
+    </dd>
+
+    <dt>
+      Updated at
+    </dt>
+    <dd>
+      <%= time_ago_in_words(@the_activity.updated_at) %> ago
+    </dd>
+  </dl>
+</article>
+
+<hr>
+
+
+<article>
+  <header>
+    <h2>
+      Edit activity
+    </h2>
+  </header>
+
+  <form action="/modify_activity/<%= @the_activity.id %>"  method="post" >
+    <div>
+      <label for="name_box">
+        Name
+      </label>
+
+      <input type="text" id="name_box" name="query_name" value="<%= @the_activity.name %>">
+    </div>
+
+    <div>
+      <label for="picture_box">
+        Picture
+      </label>
+
+      <input type="text" id="picture_box" name="query_picture" value="<%= @the_activity.picture %>">
+    </div>
+
+    <div>
+      <label for="address_box">
+        Address
+      </label>
+
+      <input type="text" id="address_box" name="query_address" value="<%= @the_activity.address %>">
+    </div>
+
+    <div>
+      <label for="notes_box">
+        Notes
+      </label>
+
+      <input type="text" id="notes_box" name="query_notes" value="<%= @the_activity.notes %>">
+    </div>
+
+    <div>
+      <label for="any_cost_box">
+        Any cost
+      </label>
+
+      <input type="text" id="any_cost_box" name="query_any_cost" value="<%= @the_activity.any_cost %>">
+    </div>
+
+    <div>
+      <label for="cost_box">
+        Cost
+      </label>
+
+      <input type="text" id="cost_box" name="query_cost" value="<%= @the_activity.cost %>">
+    </div>
+
+    <div>
+      <label for="picture_caption_box">
+        Picture caption
+      </label>
+
+      <input type="text" id="picture_caption_box" name="query_picture_caption" value="<%= @the_activity.picture_caption %>">
+    </div>
+
+    <div>
+      <label for="day_id_box">
+        Day
+      </label>
+
+      <input type="text" id="day_id_box" name="query_day_id" value="<%= @the_activity.day_id %>">
+    </div>
+
+    <button type="submit">
+      Update activity
+    </button>
+  </form>
+</article>
+
+<hr>

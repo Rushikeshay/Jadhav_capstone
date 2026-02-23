@@ -1,0 +1,126 @@
+<h1>
+  Journal #<%= @the_journal.id %> details
+</h1>
+
+<article>
+  <div>
+    <a href="/journals">
+      Go back
+    </a>
+  </div>
+
+  <div>
+    <a href="/delete_journal/<%= @the_journal.id %>">
+      Delete journal
+    </a>
+  </div>
+  <dl>
+    <dt>
+      Day
+    </dt>
+    <dd>
+      <%= @the_journal.day_id %>
+    </dd>
+
+    <dt>
+      User
+    </dt>
+    <dd>
+      <%= @the_journal.user_id %>
+    </dd>
+
+    <dt>
+      Ai generated questions
+    </dt>
+    <dd>
+      <%= @the_journal.ai_generated_questions %>
+    </dd>
+
+    <dt>
+      Response
+    </dt>
+    <dd>
+      <%= @the_journal.response %>
+    </dd>
+
+    <dt>
+      Best activity
+    </dt>
+    <dd>
+      <%= @the_journal.best_activity_id %>
+    </dd>
+
+    <dt>
+      Created at
+    </dt>
+    <dd>
+      <%= time_ago_in_words(@the_journal.created_at) %> ago
+    </dd>
+
+    <dt>
+      Updated at
+    </dt>
+    <dd>
+      <%= time_ago_in_words(@the_journal.updated_at) %> ago
+    </dd>
+  </dl>
+</article>
+
+<hr>
+
+
+<article>
+  <header>
+    <h2>
+      Edit journal
+    </h2>
+  </header>
+
+  <form action="/modify_journal/<%= @the_journal.id %>"  method="post" >
+    <div>
+      <label for="day_id_box">
+        Day
+      </label>
+
+      <input type="text" id="day_id_box" name="query_day_id" value="<%= @the_journal.day_id %>">
+    </div>
+
+    <div>
+      <label for="user_id_box">
+        User
+      </label>
+
+      <input type="text" id="user_id_box" name="query_user_id" value="<%= @the_journal.user_id %>">
+    </div>
+
+    <div>
+      <label for="ai_generated_questions_box">
+        Ai generated questions
+      </label>
+
+      <input type="text" id="ai_generated_questions_box" name="query_ai_generated_questions" value="<%= @the_journal.ai_generated_questions %>">
+    </div>
+
+    <div>
+      <label for="response_box">
+        Response
+      </label>
+
+      <input type="text" id="response_box" name="query_response" value="<%= @the_journal.response %>">
+    </div>
+
+    <div>
+      <label for="best_activity_id_box">
+        Best activity
+      </label>
+
+      <input type="text" id="best_activity_id_box" name="query_best_activity_id" value="<%= @the_journal.best_activity_id %>">
+    </div>
+
+    <button type="submit">
+      Update journal
+    </button>
+  </form>
+</article>
+
+<hr>

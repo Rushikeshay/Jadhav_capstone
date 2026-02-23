@@ -1,0 +1,81 @@
+<h1>
+  Membership #<%= @the_membership.id %> details
+</h1>
+
+<article>
+  <div>
+    <a href="/memberships">
+      Go back
+    </a>
+  </div>
+
+  <div>
+    <a href="/delete_membership/<%= @the_membership.id %>">
+      Delete membership
+    </a>
+  </div>
+  <dl>
+    <dt>
+      User
+    </dt>
+    <dd>
+      <%= @the_membership.user_id %>
+    </dd>
+
+    <dt>
+      Trip
+    </dt>
+    <dd>
+      <%= @the_membership.trip_id %>
+    </dd>
+
+    <dt>
+      Created at
+    </dt>
+    <dd>
+      <%= time_ago_in_words(@the_membership.created_at) %> ago
+    </dd>
+
+    <dt>
+      Updated at
+    </dt>
+    <dd>
+      <%= time_ago_in_words(@the_membership.updated_at) %> ago
+    </dd>
+  </dl>
+</article>
+
+<hr>
+
+
+<article>
+  <header>
+    <h2>
+      Edit membership
+    </h2>
+  </header>
+
+  <form action="/modify_membership/<%= @the_membership.id %>"  method="post" >
+    <div>
+      <label for="user_id_box">
+        User
+      </label>
+
+      <input type="text" id="user_id_box" name="query_user_id" value="<%= @the_membership.user_id %>">
+    </div>
+
+    <div>
+      <label for="trip_id_box">
+        Trip
+      </label>
+
+      <input type="text" id="trip_id_box" name="query_trip_id" value="<%= @the_membership.trip_id %>">
+    </div>
+
+    <button type="submit">
+      Update membership
+    </button>
+  </form>
+</article>
+
+<hr>

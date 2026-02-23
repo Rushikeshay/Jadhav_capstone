@@ -1,0 +1,81 @@
+<h1>
+  Day #<%= @the_day.id %> details
+</h1>
+
+<article>
+  <div>
+    <a href="/days">
+      Go back
+    </a>
+  </div>
+
+  <div>
+    <a href="/delete_day/<%= @the_day.id %>">
+      Delete day
+    </a>
+  </div>
+  <dl>
+    <dt>
+      Date
+    </dt>
+    <dd>
+      <%= @the_day.date %>
+    </dd>
+
+    <dt>
+      Trip
+    </dt>
+    <dd>
+      <%= @the_day.trip_id %>
+    </dd>
+
+    <dt>
+      Created at
+    </dt>
+    <dd>
+      <%= time_ago_in_words(@the_day.created_at) %> ago
+    </dd>
+
+    <dt>
+      Updated at
+    </dt>
+    <dd>
+      <%= time_ago_in_words(@the_day.updated_at) %> ago
+    </dd>
+  </dl>
+</article>
+
+<hr>
+
+
+<article>
+  <header>
+    <h2>
+      Edit day
+    </h2>
+  </header>
+
+  <form action="/modify_day/<%= @the_day.id %>"  method="post" >
+    <div>
+      <label for="date_box">
+        Date
+      </label>
+
+      <input type="date" id="date_box" name="query_date" value="<%= @the_day.date %>">
+    </div>
+
+    <div>
+      <label for="trip_id_box">
+        Trip
+      </label>
+
+      <input type="text" id="trip_id_box" name="query_trip_id" value="<%= @the_day.trip_id %>">
+    </div>
+
+    <button type="submit">
+      Update day
+    </button>
+  </form>
+</article>
+
+<hr>

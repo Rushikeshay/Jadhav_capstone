@@ -1,0 +1,43 @@
+<h1>
+  List of all trips
+</h1>
+
+<hr>
+
+<article>
+  <header>
+    <h2>
+      Add a new trip
+    </h2>
+  </header>
+
+  <form action="/insert_trip" method="post">
+    <div>
+      <label for="title_box">
+        Title
+      </label>
+
+      <input type="text" id="title_box" name="query_title">
+    </div>
+
+    <button type="submit">
+      Create trip
+    </button>
+  </form>
+</article>
+
+<hr>
+
+<article>
+  <ul>
+    <% @list_of_trips.each do |a_trip| %>
+      <li>
+        <a href="/trips/<%= a_trip.id %>">
+          Trip #<%= a_trip.id %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+</article>
+
+<hr>

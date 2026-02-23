@@ -1,0 +1,66 @@
+<h1>
+  Trip #<%= @the_trip.id %> details
+</h1>
+
+<article>
+  <div>
+    <a href="/trips">
+      Go back
+    </a>
+  </div>
+
+  <div>
+    <a href="/delete_trip/<%= @the_trip.id %>">
+      Delete trip
+    </a>
+  </div>
+  <dl>
+    <dt>
+      Title
+    </dt>
+    <dd>
+      <%= @the_trip.title %>
+    </dd>
+
+    <dt>
+      Created at
+    </dt>
+    <dd>
+      <%= time_ago_in_words(@the_trip.created_at) %> ago
+    </dd>
+
+    <dt>
+      Updated at
+    </dt>
+    <dd>
+      <%= time_ago_in_words(@the_trip.updated_at) %> ago
+    </dd>
+  </dl>
+</article>
+
+<hr>
+
+
+<article>
+  <header>
+    <h2>
+      Edit trip
+    </h2>
+  </header>
+
+  <form action="/modify_trip/<%= @the_trip.id %>"  method="post" >
+    <div>
+      <label for="title_box">
+        Title
+      </label>
+
+      <input type="text" id="title_box" name="query_title" value="<%= @the_trip.title %>">
+    </div>
+
+    <button type="submit">
+      Update trip
+    </button>
+  </form>
+</article>
+
+<hr>

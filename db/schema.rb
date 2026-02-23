@@ -10,9 +10,46 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_13_202311) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_23_211734) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "activities", force: :cascade do |t|
+    t.string "name"
+    t.string "picture"
+    t.string "address"
+    t.string "notes"
+    t.boolean "any_cost"
+    t.integer "cost"
+    t.string "picture_caption"
+    t.integer "day_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "days", force: :cascade do |t|
+    t.date "date"
+    t.integer "trip_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "journals", force: :cascade do |t|
+    t.integer "day_id"
+    t.integer "user_id"
+    t.text "ai_generated_questions"
+    t.text "response"
+    t.integer "best_activity_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "memberships", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "trip_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "solid_cable_messages", force: :cascade do |t|
     t.binary "channel", null: false
@@ -154,6 +191,26 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_13_202311) do
     t.index ["expires_at"], name: "index_solid_queue_semaphores_on_expires_at"
     t.index ["key", "value"], name: "index_solid_queue_semaphores_on_key_and_value"
     t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
+  end
+
+  create_table "trips", force: :cascade do |t|
+    t.string "title"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.string "first_name"
+    t.string "last_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade

@@ -1,0 +1,75 @@
+<h1>
+  List of all journals
+</h1>
+
+<hr>
+
+<article>
+  <header>
+    <h2>
+      Add a new journal
+    </h2>
+  </header>
+
+  <form action="/insert_journal" method="post">
+    <div>
+      <label for="day_id_box">
+        Day
+      </label>
+
+      <input type="text" id="day_id_box" name="query_day_id">
+    </div>
+
+    <div>
+      <label for="user_id_box">
+        User
+      </label>
+
+      <input type="text" id="user_id_box" name="query_user_id">
+    </div>
+
+    <div>
+      <label for="ai_generated_questions_box">
+        Ai generated questions
+      </label>
+
+      <input type="text" id="ai_generated_questions_box" name="query_ai_generated_questions">
+    </div>
+
+    <div>
+      <label for="response_box">
+        Response
+      </label>
+
+      <input type="text" id="response_box" name="query_response">
+    </div>
+
+    <div>
+      <label for="best_activity_id_box">
+        Best activity
+      </label>
+
+      <input type="text" id="best_activity_id_box" name="query_best_activity_id">
+    </div>
+
+    <button type="submit">
+      Create journal
+    </button>
+  </form>
+</article>
+
+<hr>
+
+<article>
+  <ul>
+    <% @list_of_journals.each do |a_journal| %>
+      <li>
+        <a href="/journals/<%= a_journal.id %>">
+          Journal #<%= a_journal.id %>
+        </a>
+      </li>
+    <% end %>
+  </ul>
+</article>
+
+<hr>
