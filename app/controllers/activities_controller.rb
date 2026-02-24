@@ -46,12 +46,12 @@ end
     the_activity = Activity.where({ :id => the_id }).at(0)
 
     the_activity.name = params.fetch("query_name")
-    the_activity.picture = params.fetch("query_picture")
+    the_activity.picture = params.fetch("query_picture", the_activity.picture)
+    the_activity.picture_caption = params.fetch("query_picture_caption", the_activity.picture_caption)
     the_activity.address = params.fetch("query_address")
     the_activity.notes = params.fetch("query_notes")
     the_activity.any_cost = params.fetch("query_any_cost")
     the_activity.cost = params.fetch("query_cost")
-    the_activity.picture_caption = params.fetch("query_picture_caption")
     the_activity.day_id = params.fetch("query_day_id")
 
     if the_activity.valid?
