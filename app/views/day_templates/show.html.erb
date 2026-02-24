@@ -12,7 +12,11 @@
       <ul>
         <% @the_day.activities.each do |activity| %>
           <li style="margin-bottom: 15px;">
-            <strong><%= activity.name %></strong>
+            <strong>
+              <a href="/activities/<%= activity.id %>">
+                <%= activity.name %>
+              </a>
+            </strong>
 
             <% if activity.picture.present? %>
               <div style="margin-top: 5px;">

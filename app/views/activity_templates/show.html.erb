@@ -1,171 +1,119 @@
-<h1>
-  Activity #<%= @the_activity.id %> details
-</h1>
-
-<article>
-  <div>
-    <a href="/activities">
-      Go back
+<div class="container py-4">
+  <nav class="mb-4">
+    <a href="/days/<%= @the_activity.day_id %>" class="btn btn-outline-secondary btn-sm">
+      <i class="fa-solid fa-arrow-left"></i> Back to Day Plan
     </a>
+  </nav>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+          <h2 class="h5 mb-0">Edit Activity Details</h2>
+        </div>
+        <div class="card-body">
+          <form action="/modify_activity/<%= @the_activity.id %>" method="post">
+            <div class="mb-3">
+              <label for="name_box" class="form-label fw-bold">Name</label>
+              <input type="text" id="name_box" name="query_name" value="<%= @the_activity.name %>" class="form-control">
+            </div>
+
+            <div class="mb-3">
+              <label for="address_box" class="form-label fw-bold">Address</label>
+              <input type="text" id="address_box" name="query_address" value="<%= @the_activity.address %>" class="form-control">
+            </div>
+
+            <div class="row mb-3">
+              <div class="col">
+                <label for="cost_box" class="form-label fw-bold">Cost</label>
+                <input type="text" id="cost_box" name="query_cost" value="<%= @the_activity.cost %>" class="form-control">
+              </div>
+              <div class="col">
+                <label for="any_cost_box" class="form-label fw-bold">Any cost?</label>
+                <input type="text" id="any_cost_box" name="query_any_cost" value="<%= @the_activity.any_cost %>" class="form-control">
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="notes_box" class="form-label fw-bold">Notes</label>
+              <textarea id="notes_box" name="query_notes" rows="4" class="form-control"><%= @the_activity.notes %></textarea>
+            </div>
+
+            <input type="hidden" name="query_day_id" value="<%= @the_activity.day_id %>">
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success">Update Logistics</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <a href="/delete_activity/<%= @the_activity.id %>" class="text-danger small" onclick="return confirm('Delete this activity?')">
+        Delete Activity
+      </a>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h2 class="h5 mb-0">Activity Gallery</h2>
+          <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#photoModal">
+            <i class="fa-solid fa-camera"></i> Add Picture
+          </button>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <% if @the_activity.photos.any? %>
+              <% @the_activity.photos.each do |photo| %>
+                <div class="col-6">
+                  <div class="card h-100 shadow-sm">
+                    <img src="<%= photo.image %>" class="card-img-top" alt="Gallery image" style="height: 150px; object-fit: cover;">
+                    <% if photo.caption.present? %>
+                      <div class="card-footer p-1 text-center">
+                        <small class="text-muted"><%= photo.caption %></small>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            <% else %>
+              <div class="text-center py-5 border rounded bg-light w-100">
+                <i class="fa-regular fa-image fa-3x text-secondary mb-2"></i>
+                <p class="text-secondary">No pictures yet. Click the button above to add one!</p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 
-  <div>
-    <a href="/delete_activity/<%= @the_activity.id %>">
-      Delete activity
-    </a>
+<div class="modal fade" id="photoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="/insert_photo" method="post" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h5 class="modal-title" id="photoModalLabel">Upload New Photo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+             <label for="image_box" class="form-label fw-bold">Choose Image</label>
+             <input type="file" id="image_box" name="query_image" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="caption_box" class="form-label fw-bold">Caption</label>
+            <input type="text" id="caption_box" name="query_caption" placeholder="Describe this photo..." class="form-control">
+          </div>
+          
+          <input type="hidden" name="query_activity_id" value="<%= @the_activity.id %>">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Upload to Gallery</button>
+        </div>
+      </form>
+    </div>
   </div>
-  <dl>
-    <dt>
-      Name
-    </dt>
-    <dd>
-      <%= @the_activity.name %>
-    </dd>
-
-    <dt>
-      Picture
-    </dt>
-    <dd>
-      <%= @the_activity.picture %>
-    </dd>
-
-    <dt>
-      Address
-    </dt>
-    <dd>
-      <%= @the_activity.address %>
-    </dd>
-
-    <dt>
-      Notes
-    </dt>
-    <dd>
-      <%= @the_activity.notes %>
-    </dd>
-
-    <dt>
-      Any cost
-    </dt>
-    <dd>
-      <%= @the_activity.any_cost %>
-    </dd>
-
-    <dt>
-      Cost
-    </dt>
-    <dd>
-      <%= @the_activity.cost %>
-    </dd>
-
-    <dt>
-      Picture caption
-    </dt>
-    <dd>
-      <%= @the_activity.picture_caption %>
-    </dd>
-
-    <dt>
-      Day
-    </dt>
-    <dd>
-      <%= @the_activity.day_id %>
-    </dd>
-
-    <dt>
-      Created at
-    </dt>
-    <dd>
-      <%= time_ago_in_words(@the_activity.created_at) %> ago
-    </dd>
-
-    <dt>
-      Updated at
-    </dt>
-    <dd>
-      <%= time_ago_in_words(@the_activity.updated_at) %> ago
-    </dd>
-  </dl>
-</article>
-
-<hr>
-
-
-<article>
-  <header>
-    <h2>
-      Edit activity
-    </h2>
-  </header>
-
-  <form action="/modify_activity/<%= @the_activity.id %>"  method="post" >
-    <div>
-      <label for="name_box">
-        Name
-      </label>
-
-      <input type="text" id="name_box" name="query_name" value="<%= @the_activity.name %>">
-    </div>
-
-    <div>
-      <label for="picture_box">
-        Picture
-      </label>
-
-      <input type="text" id="picture_box" name="query_picture" value="<%= @the_activity.picture %>">
-    </div>
-
-    <div>
-      <label for="address_box">
-        Address
-      </label>
-
-      <input type="text" id="address_box" name="query_address" value="<%= @the_activity.address %>">
-    </div>
-
-    <div>
-      <label for="notes_box">
-        Notes
-      </label>
-
-      <input type="text" id="notes_box" name="query_notes" value="<%= @the_activity.notes %>">
-    </div>
-
-    <div>
-      <label for="any_cost_box">
-        Any cost
-      </label>
-
-      <input type="text" id="any_cost_box" name="query_any_cost" value="<%= @the_activity.any_cost %>">
-    </div>
-
-    <div>
-      <label for="cost_box">
-        Cost
-      </label>
-
-      <input type="text" id="cost_box" name="query_cost" value="<%= @the_activity.cost %>">
-    </div>
-
-    <div>
-      <label for="picture_caption_box">
-        Picture caption
-      </label>
-
-      <input type="text" id="picture_caption_box" name="query_picture_caption" value="<%= @the_activity.picture_caption %>">
-    </div>
-
-    <div>
-      <label for="day_id_box">
-        Day
-      </label>
-
-      <input type="text" id="day_id_box" name="query_day_id" value="<%= @the_activity.day_id %>">
-    </div>
-
-    <button type="submit">
-      Update activity
-    </button>
-  </form>
-</article>
-
-<hr>
+</div>

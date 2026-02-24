@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  resources :photos
+
+  post("/insert_photo", { :controller => "photos", :action => "create" })
 
   # home page to Trips Index page 
   root "trips#index"
