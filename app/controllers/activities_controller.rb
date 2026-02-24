@@ -18,28 +18,24 @@ class ActivitiesController < ApplicationController
   end
 
   def create
-  the_activity = Activity.new
-  the_activity.day_id = params.fetch("query_day_id")
-  the_activity.name = params.fetch("query_name")
-  
-  # Use params.fetch for the file upload as per the cheatsheet
-  # CarrierWave handles the "magic" of turning this into a URL
-  if params.has_key?("query_picture")
-    the_activity.picture = params.fetch("query_picture")
-  end
+    the_activity = Activity.new
+    the_activity.day_id = params.fetch("query_day_id")
+    the_activity.name = params.fetch("query_name")
+    the_activity.address = params["query_address"]
+    the_activity.notes = params["query_notes"]
+    the_activity.any_cost = params["query_any_cost"]
 
-  the_activity.address = params["query_address"]
-  the_activity.notes = params["query_notes"]
-  the_activity.any_cost = params["query_any_cost"]
+    if params.has_key?("query_picture")
+      the_activity.picture = params.fetch("query_picture")
+    end
 
-  if the_activity.valid?
-    the_activity.save
-    redirect_to("/days/#{the_activity.day_id}", { :notice => "Activity created successfully." })
-  else
-    # If it fails, we send them back to the day page with the error messages
-    redirect_to("/days/#{the_activity.day_id}", { :alert => the_activity.errors.full_messages.to_sentence })
+    if the_activity.valid?
+      the_activity.save
+      redirect_to("/days/#{the_activity.day_id}", { :notice => "Activity created successfully." })
+    else
+      redirect_to("/days/#{the_activity.day_id}", { :alert => the_activity.errors.full_messages.to_sentence })
+    end
   end
-end
 
   def update
     the_id = params.fetch("path_id")
@@ -56,7 +52,7 @@ end
 
     if the_activity.valid?
       the_activity.save
-      redirect_to("/activities/#{the_activity.id}", { :notice => "Activity updated successfully." } )
+      redirect_to("/activities/#{the_activity.id}", { :notice => "Activity updated successfully." })
     else
       redirect_to("/activities/#{the_activity.id}", { :alert => the_activity.errors.full_messages.to_sentence })
     end
@@ -68,42 +64,6 @@ end
 
     the_activity.destroy
 
-    redirect_to("/activities", { :notice => "Activity deleted successfully." } )
+    redirect_to("/activities", { :notice => "Activity deleted successfully." })
   end
-
-  def create
-  the_activity = Activity.new
-  the_activity.day_id = params.fetch("query_day_id")
-  the_activity.name = params.fetch("query_name")
-  address = params.fetch("query_address")
-  the_activity.address = address
-
-  # --- GEOCODING LOGIC ---
-  if address.present?
-    # We use CGI.escape to make the address URL-friendly
-    api_url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{CGI.escape(address)}&key=#{ENV.fetch('GOOGLE_MAPS_API_KEY')}"
-    
-    # Make the request to Google
-    raw_response = HTTP.get(api_url)
-    parsed_data = JSON.parse(raw_response)
-    
-    if parsed_data.fetch("results").any?
-      location = parsed_data.fetch("results").at(0).fetch("geometry").fetch("location")
-      the_activity.latitude = location.fetch("lat")
-      the_activity.longitude = location.fetch("lng")
-    end
-  end
-  # --- END GEOCODING ---
-
-  the_activity.picture = params["query_picture"] if params.has_key?("query_picture")
-  the_activity.notes = params["query_notes"]
-
-  if the_activity.valid?
-    the_activity.save
-    redirect_to("/days/#{the_activity.day_id}", { :notice => "Activity created with location!" })
-  else
-    redirect_to("/days/#{the_activity.day_id}", { :alert => the_activity.errors.full_messages.to_sentence })
-  end
-end
-
 end

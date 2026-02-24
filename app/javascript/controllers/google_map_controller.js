@@ -16,9 +16,13 @@ export default class extends Controller {
     const bounds = new google.maps.LatLngBounds();
 
     this.markersValue.forEach((markerData) => {
-      if (markerData.lat && markerData.lng) {
-        const position = { lat: parseFloat(markerData.lat), lng: parseFloat(markerData.lng) };
-        
+      // Use Number() to ensure we aren't dealing with strings
+      const lat = Number(markerData.lat);
+      const lng = Number(markerData.lng);
+
+      if (!isNaN(lat) && !isNaN(lng)) {
+        const position = { lat: lat, lng: lng };
+
         new AdvancedMarkerElement({
           map: map,
           position: position,

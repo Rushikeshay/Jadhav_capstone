@@ -1,51 +1,16 @@
-<h1>
-  List of all days
-</h1>
+<div class="container py-4">
+  <h1 class="h3 mb-4">All Days</h1>
 
-<hr>
-
-<article>
-  <header>
-    <h2>
-      Add a new day
-    </h2>
-  </header>
-
-  <form action="/insert_day" method="post">
-    <div>
-      <label for="date_box">
-        Date
-      </label>
-
-      <input type="date" id="date_box" name="query_date">
-    </div>
-
-    <div>
-      <label for="trip_id_box">
-        Trip
-      </label>
-
-      <input type="text" id="trip_id_box" name="query_trip_id">
-    </div>
-
-    <button type="submit">
-      Create day
-    </button>
-  </form>
-</article>
-
-<hr>
-
-<article>
-  <ul>
-    <% @list_of_days.each do |a_day| %>
-      <li>
-        <a href="/days/<%= a_day.id %>">
-          Day #<%= a_day.id %>
+  <% if @list_of_days.any? %>
+    <div class="list-group mb-4">
+      <% @list_of_days.each do |a_day| %>
+        <a href="/days/<%= a_day.id %>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+          <span><i class="fa-regular fa-calendar me-2 text-primary"></i><%= a_day.date&.strftime("%B %-d, %Y") || "Day ##{a_day.id}" %></span>
+          <small class="text-muted">Trip #<%= a_day.trip_id %></small>
         </a>
-      </li>
-    <% end %>
-  </ul>
-</article>
-
-<hr>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-muted">No days yet.</p>
+  <% end %>
+</div>

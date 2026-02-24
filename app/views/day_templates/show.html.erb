@@ -1,92 +1,110 @@
-<h1>Day Details</h1>
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="/trips/<%= @the_day.trip_id %>" class="btn btn-outline-secondary btn-sm">
+      <i class="fa-solid fa-arrow-left"></i> Back to Trip
+    </a>
+    <a href="/delete_day/<%= @the_day.id %>" class="btn btn-outline-danger btn-sm"
+       onclick="return confirm('Delete this day?')">
+      <i class="fa-solid fa-trash"></i> Delete Day
+    </a>
+  </div>
 
-<div style="margin-bottom: 20px;">
-  <a href="/trips/<%= @the_day.trip_id %>">← Back to Trip</a> | 
-  <a href="/delete_day/<%= @the_day.id %>" style="color: red;">Delete this Day</a>
-</div>
+  <div class="row g-4">
+    <%# Activities column %>
+    <div class="col-lg-7">
+      <h2 class="h4 mb-3">Activities</h2>
 
-<div style="display: flex; gap: 40px;">
-  <section style="flex: 2;">
-    <h2>Activities</h2>
-    <% if @the_day.activities.any? %>
-      <ul>
-        <% @the_day.activities.each do |activity| %>
-          <li style="margin-bottom: 15px;">
-            <strong>
-              <a href="/activities/<%= activity.id %>">
-                <%= activity.name %>
-              </a>
-            </strong>
+      <% if @the_day.activities.any? %>
+        <div class="row g-3">
+          <% @the_day.activities.each do |activity| %>
+            <div class="col-md-6">
+              <div class="card h-100 shadow-sm">
+                <% if activity.photos.any? %>
+                  <img src="<%= activity.photos.first.image %>" class="card-img-top"
+                       style="height: 200px; object-fit: cover;" alt="<%= activity.name %>">
+                <% elsif activity.picture.present? %>
+                  <img src="<%= activity.picture %>" class="card-img-top"
+                       style="height: 200px; object-fit: cover;" alt="<%= activity.name %>">
+                <% else %>
+                  <div class="bg-light text-center py-5 border-bottom">
+                    <i class="fa-regular fa-image fa-3x text-muted"></i>
+                  </div>
+                <% end %>
 
-            <% if activity.picture.present? %>
-              <div style="margin-top: 5px;">
-                <img src="<%= activity.picture_url %>" style="width: 200px; border-radius: 8px; display: block;">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <a href="/activities/<%= activity.id %>" class="text-decoration-none text-primary">
+                      <%= activity.name %>
+                    </a>
+                  </h5>
+                  <% if activity.notes.present? %>
+                    <p class="card-text text-muted small"><%= activity.notes %></p>
+                  <% end %>
+                </div>
+
+                <% if activity.address.present? %>
+                  <div class="card-footer bg-white border-top-0">
+                    <small class="text-secondary">
+                      <i class="fa-solid fa-location-dot me-1"></i><%= activity.address %>
+                    </small>
+                  </div>
+                <% end %>
               </div>
-            <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-muted">No activities added yet.</p>
+      <% end %>
 
-            <% if activity.notes.present? %>
-              <p><small><%= activity.notes %></small></p>
-            <% end %>
-          </li>
-        <% end %>
-      </ul>
-    <% else %>
-      <p>No activities added yet.</p>
-    <% end %>
-    <hr>
-    <h3>Add a new activity</h3>
-    <form action="/insert_activity" method="post" enctype="multipart/form-data">
-      <input type="hidden" name="query_day_id" value="<%= @the_day.id %>">
+      <hr class="my-4">
 
-      <div style="margin-bottom: 10px;">
-        <label for="name_box">Activity Name</label><br>
-        <input type="text" id="name_box" name="query_name" placeholder="e.g. Eiffel Tower Visit" required>
+      <h3 class="h5 mb-3">Add a New Activity</h3>
+      <form action="/insert_activity" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="query_day_id" value="<%= @the_day.id %>">
+
+        <div class="mb-3">
+          <label for="name_box" class="form-label fw-bold">Activity Name</label>
+          <input type="text" id="name_box" name="query_name"
+                 class="form-control" placeholder="e.g. Eiffel Tower Visit" required>
+        </div>
+
+        <div class="mb-3">
+          <label for="address_box" class="form-label fw-bold">Address / Location</label>
+          <input type="text" id="address_box" name="query_address"
+                 class="form-control" placeholder="123 Street Name">
+        </div>
+
+        <div class="mb-3">
+          <label for="notes_box" class="form-label fw-bold">Notes</label>
+          <textarea id="notes_box" name="query_notes" rows="3"
+                    class="form-control" placeholder="Don't forget the tickets!"></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="picture_box" class="form-label fw-bold">Upload Picture</label>
+          <input type="file" id="picture_box" name="query_picture" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-success">
+          <i class="fa-solid fa-plus"></i> Add Activity
+        </button>
+      </form>
+    </div>
+
+    <%# Map column %>
+    <div class="col-lg-5">
+      <h3 class="h5 mb-3">Map</h3>
+      <div
+        class="rounded border"
+        style="height: 500px;"
+        data-controller="google-map"
+        data-google-map-markers-value="<%= map_markers_json(@the_day.activities) %>"
+        data-google-map-zoom-value="12">
       </div>
-
-      <div>
-        <label for="picture_box">Upload Picture</label><br>
-        <input type="file" id="picture_box" name="query_picture">
-      </div>
-
-      <button>Add Activity</button>
-
-      <div style="margin-bottom: 10px;">
-        <label for="address_box">Address/Location</label><br>
-        <input type="text" id="address_box" name="query_address" placeholder="123 Street Name">
-      </div>
-
-      <div style="margin-bottom: 10px;">
-        <label for="notes_box">Notes</label><br>
-        <textarea id="notes_box" name="query_notes" rows="3" placeholder="Don't forget the tickets!"></textarea>
-      </div>
-
-      <button style="background-color: #2ea44f; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer;">
-        Add Activity
-      </button>
-    </form>
-  </section>
-
-  <section style="flex: 1; border-left: 1px solid #ccc; padding-left: 20px;">
-    <h3>Map</h3>
-
-    <% 
-      map_markers = @the_day.activities.map do |activity|
-        { 
-          title: activity.name, 
-          lat: activity.latitude, 
-          lng: activity.longitude 
-        }
-      end 
-    %>
-
-    <div 
-      data-controller="google-map" 
-      data-google-map-markers-value="<%= map_markers.to_json %>"
-      style="height: 400px; width: 100%; border-radius: 8px;"
-    ></div>
-
-    <p style="margin-top: 20px; font-size: 0.8em; color: gray;">
-      Showing locations for <%= pluralize(@the_day.activities.count, "activity") %>
-    </p>
-  </section>
+      <p class="text-muted small mt-2">
+        Showing locations for <%= pluralize(@the_day.activities.count, "activity") %>
+      </p>
+    </div>
+  </div>
 </div>

@@ -170,6 +170,9 @@ GEM
     fugit (1.11.1)
       et-orbi (~> 1, >= 1.2.11)
       raabro (~> 1.4)
+    geocoder (1.8.6)
+      base64 (>= 0.1.0)
+      csv (>= 3.0.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
     grade_runner (0.0.15)
@@ -502,6 +505,7 @@ DEPENDENCIES
   dev_toolbar (~> 2.1.0)
   dotenv
   draft_generators (~> 0.0.5)
+  geocoder
   grade_runner (~> 0.0.15)
   haikunator
   htmlbeautifier

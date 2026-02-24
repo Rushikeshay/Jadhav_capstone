@@ -19,6 +19,7 @@ gem "rollbar"                         # Error tracking in production
 gem "appdev_support"                  # Learning helpers (nicer error messages, etc.)
 gem "carrierwave"
 gem "cloudinary"
+gem "geocoder"
 
 group :development, :test do
   gem "debug", platforms: %i[mri windows], require: "debug/prelude" # Ruby debugger

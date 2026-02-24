@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Rails 8 Template" %></title>
+    <title><%= content_for(:title) || "Travel Journal" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -10,19 +10,19 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
-    <%# Bootstrap%>
+
+    <%# Bootstrap 5 %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+
+    <%# Google Maps bootstrap loader %>
+    <meta name="google_maps_api_key" content="<%= ENV.fetch("GOOGLE_MAPS_API_KEY", "") %>">
     <script>
       (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await(a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
         key: "<%= ENV.fetch("GOOGLE_MAPS_API_KEY", "") %>",
@@ -32,18 +32,64 @@
   </head>
 
   <body>
-    <nav>
-      <% if user_signed_in? %>
-        <p>Logged in as: <%= current_user.email %></p>
-        <a href="/users/edit">Edit Profile</a> |
-        <a href="/users/sign_out" data-method="delete" rel="nofollow">Sign Out</a>
-      <% else %>
-        <a href="/users/sign_up">Sign Up</a> |
-        <a href="/users/sign_in">Sign In</a>
-      <% end %>
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary mb-4">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="/trips">
+          Travel Journal
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainNav">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/trips">Trips</a>
+            </li>
+          </ul>
+          <ul class="navbar-nav ms-auto">
+            <% if user_signed_in? %>
+              <li class="nav-item">
+                <span class="nav-link text-white-50"><i class="fa-solid fa-user me-1"></i><%= current_user.email %></span>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/users/edit">Edit Profile</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/users/sign_out" data-method="delete" rel="nofollow">Sign Out</a>
+              </li>
+            <% else %>
+              <li class="nav-item">
+                <a class="nav-link" href="/users/sign_up">Sign Up</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/users/sign_in">Sign In</a>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
     </nav>
-    <hr>
+
+    <% if notice %>
+      <div class="container">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+          <%= notice %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      </div>
+    <% end %>
+
+    <% if alert %>
+      <div class="container">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+          <%= alert %>
+          <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+      </div>
+    <% end %>
+
     <%= yield %>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
