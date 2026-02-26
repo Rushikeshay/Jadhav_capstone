@@ -9,6 +9,29 @@
     </a>
   </div>
 
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <form action="/modify_day/<%= @the_day.id %>" method="post" class="row g-3 align-items-end">
+        <input type="hidden" name="query_trip_id" value="<%= @the_day.trip_id %>">
+        <div class="col-auto">
+          <label class="form-label fw-bold mb-1">Date</label>
+          <input type="date" name="query_date" class="form-control"
+                 value="<%= @the_day.date&.strftime("%Y-%m-%d") %>" required>
+        </div>
+        <div class="col">
+          <label class="form-label fw-bold mb-1">Title <span class="text-muted fw-normal">(optional)</span></label>
+          <input type="text" name="query_title" class="form-control"
+                 value="<%= @the_day.title %>" placeholder="e.g. Arrival Day, Beach Day...">
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-success">
+            <i class="fa-solid fa-floppy-disk"></i> Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div class="row g-4">
     <%# Left Column: Activities List & Add Form %>
     <div class="col-lg-7">

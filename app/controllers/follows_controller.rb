@@ -13,9 +13,9 @@ class FollowsController < ApplicationController
     the_follow.followed_id = params.fetch("query_followed_id")
 
     if the_follow.save
-      redirect_back(fallback_location: "/people", { :notice => "Now following!" })
+      redirect_back(fallback_location: "/people", notice: "Now following!")
     else
-      redirect_back(fallback_location: "/people", { :alert => the_follow.errors.full_messages.to_sentence })
+      redirect_back(fallback_location: "/people", alert: the_follow.errors.full_messages.to_sentence)
     end
   end
 
@@ -25,7 +25,7 @@ class FollowsController < ApplicationController
 
     if the_follow
       the_follow.destroy
-      redirect_back(fallback_location: "/people", { :notice => "Unfollowed." })
+      redirect_back(fallback_location: "/people", notice: "Unfollowed.")
     else
       redirect_to("/people", { :alert => "Follow not found." })
     end
