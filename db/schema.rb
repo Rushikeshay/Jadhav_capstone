@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_26_214333) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_26_220002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -27,6 +27,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_26_214333) do
     t.datetime "updated_at", null: false
     t.float "latitude"
     t.float "longitude"
+  end
+
+  create_table "comments", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "activity_id", null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "days", force: :cascade do |t|
@@ -53,6 +61,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_26_214333) do
     t.integer "best_activity_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "likes", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "activity_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "activity_id"], name: "index_likes_on_user_id_and_activity_id", unique: true
   end
 
   create_table "memberships", force: :cascade do |t|
@@ -231,6 +247,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_26_214333) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "username"
+    t.string "avatar"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

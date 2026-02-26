@@ -56,13 +56,15 @@
           <ul class="navbar-nav ms-auto">
             <% if user_signed_in? %>
               <li class="nav-item">
-                <span class="nav-link text-white-50">
-                  <i class="fa-solid fa-user me-1"></i>
+                <a class="nav-link text-white-50 d-flex align-items-center gap-2" href="/users/edit">
+                  <% if current_user.avatar&.url.present? %>
+                    <img src="<%= current_user.avatar.url %>" class="rounded-circle"
+                         style="width:26px;height:26px;object-fit:cover;" alt="avatar">
+                  <% else %>
+                    <i class="fa-solid fa-user"></i>
+                  <% end %>
                   <%= current_user.username.presence || current_user.first_name.presence || current_user.email %>
-                </span>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/users/edit">Edit Profile</a>
+                </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/users/sign_out" data-method="delete" rel="nofollow">Sign Out</a>

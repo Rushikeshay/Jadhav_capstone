@@ -4,14 +4,23 @@ class TripsController < ApplicationController
 
     followed_ids = current_user.following.pluck(:id)
     if followed_ids.any?
-      owner_trip_ids = Membership.where({ :user_id => followed_ids, :role => "owner" }).pluck(:trip_id)
-      @feed_photos = Photo.joins(:activity => { :day => :trip })
-                          .where({ :trips => { :id => owner_trip_ids } })
-                          .includes(:activity => { :day => :trip })
-                          .order({ :created_at => :desc })
-                          .limit(30)
+      owner_memberships = Membership.where({ :user_id => followed_ids, :role => "owner" })
+      owner_trip_ids = owner_memberships.pluck(:trip_id)
+      day_ids = Day.where({ :trip_id => owner_trip_ids }).pluck(:id)
+
+      @feed_activities = Activity.where({ :day_id => day_ids })
+                                 .includes({ :day => :trip }, { :likes => :user }, { :comments => :user })
+                                 .order({ :created_at => :desc })
+                                 .limit(30)
+
+      # Build trip_id => owner User lookup for display in feed
+      user_ids = owner_memberships.pluck(:user_id)
+      users_by_id = User.where({ :id => user_ids }).index_by(&:id)
+      @trip_owners = {}
+      owner_memberships.each { |m| @trip_owners[m.trip_id] = users_by_id[m.user_id] }
     else
-      @feed_photos = []
+      @feed_activities = []
+      @trip_owners = {}
     end
 
     render({ :template => "trip_templates/index" })

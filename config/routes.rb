@@ -108,6 +108,14 @@ Rails.application.routes.draw do
 
   # DELETE
   get("/unfollow_user/:path_id", { :controller => "follows", :action => "destroy" })
+
+  # Routes for likes:
+  post("/like_activity",           { :controller => "likes", :action => "create" })
+  get("/unlike_activity/:path_id", { :controller => "likes", :action => "destroy" })
+
+  # Routes for comments:
+  post("/insert_comment",          { :controller => "comments", :action => "create" })
+  get("/delete_comment/:path_id",  { :controller => "comments", :action => "destroy" })
   devise_for :users
   # This is a blank app! Pick your first screen, build out the RCAV, and go from there. E.g.:
   # get("/your_first_screen", { :controller => "pages", :action => "first" })

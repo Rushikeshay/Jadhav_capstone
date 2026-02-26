@@ -44,37 +44,99 @@
         <i class="fa-solid fa-images me-2 text-primary"></i>Travel Feed
       </h2>
 
-      <% if @feed_photos.any? %>
+      <% if @feed_activities.any? %>
         <div class="d-flex flex-column gap-3">
-          <% @feed_photos.each do |photo| %>
-            <% activity = photo.activity %>
+          <% @feed_activities.each do |activity| %>
             <% day = activity.day %>
             <% trip = day.trip %>
-            <% owner_membership = trip.memberships.find { |m| m.role == "owner" } %>
-            <% owner = owner_membership ? User.find_by(id: owner_membership.user_id) : nil %>
+            <% owner = @trip_owners[trip.id] %>
+            <% my_like = activity.likes.find { |l| l.user_id == current_user.id } %>
 
             <div class="card shadow-sm border-0 overflow-hidden">
-              <% if photo.image.present? %>
-                <img src="<%= photo.image.url %>" alt="<%= photo.caption %>"
+              <%# Activity picture %>
+              <% if activity.picture.present? %>
+                <img src="<%= activity.picture.url %>" alt="<%= activity.name %>"
                      class="card-img-top" style="max-height:320px;object-fit:cover;">
               <% end %>
-              <div class="card-body">
-                <% if photo.caption.present? %>
-                  <p class="card-text mb-2"><%= photo.caption %></p>
-                <% end %>
-                <p class="text-muted small mb-0">
-                  <i class="fa-solid fa-location-dot me-1"></i><%= activity.name %>
-                  &nbsp;&middot;&nbsp;
-                  <i class="fa-solid fa-plane me-1"></i>
-                  <a href="/trips/<%= trip.id %>" class="text-decoration-none text-muted fw-semibold">
-                    <%= trip.title.presence || "Trip ##{trip.id}" %>
-                  </a>
-                  <% if owner %>
-                    &nbsp;&middot;&nbsp;
-                    <i class="fa-solid fa-user me-1"></i>
-                    <%= [owner.first_name, owner.last_name].compact.join(" ").presence || owner.email %>
+
+              <div class="card-body pb-2">
+                <%# Owner row %>
+                <div class="d-flex align-items-center mb-2">
+                  <% if owner&.avatar&.url.present? %>
+                    <img src="<%= owner.avatar.url %>" class="rounded-circle me-2"
+                         style="width:32px;height:32px;object-fit:cover;" alt="avatar">
+                  <% else %>
+                    <div class="rounded-circle bg-secondary me-2 d-flex align-items-center justify-content-center"
+                         style="width:32px;height:32px;flex-shrink:0;">
+                      <i class="fa-solid fa-user text-white" style="font-size:0.75rem;"></i>
+                    </div>
                   <% end %>
+                  <span class="fw-semibold small">
+                    <%= owner&.username.presence || owner&.first_name.presence || owner&.email || "Traveler" %>
+                  </span>
+                </div>
+
+                <%# Location / trip / date meta %>
+                <p class="text-muted small mb-2">
+                  <i class="fa-solid fa-location-dot me-1"></i><strong><%= activity.name %></strong>
+                  &nbsp;&middot;&nbsp;
+                  <i class="fa-solid fa-plane me-1"></i><%= trip.title.presence || "Trip ##{trip.id}" %>
+                  &nbsp;&middot;&nbsp;
+                  <i class="fa-regular fa-calendar me-1"></i><%= day.date&.strftime("%b %d, %Y") %>
                 </p>
+
+                <%# Caption / notes %>
+                <% if activity.picture_caption.present? %>
+                  <p class="mb-2 small"><%= activity.picture_caption %></p>
+                <% elsif activity.notes.present? %>
+                  <p class="mb-2 small text-muted"><%= truncate(activity.notes, length: 120) %></p>
+                <% end %>
+
+                <%# Like / comment counts %>
+                <div class="d-flex align-items-center gap-3 mb-2">
+                  <% if my_like %>
+                    <a href="/unlike_activity/<%= my_like.id %>"
+                       class="text-danger text-decoration-none small">
+                      <i class="fa-solid fa-heart me-1"></i><%= activity.likes.size %>
+                    </a>
+                  <% else %>
+                    <form action="/like_activity" method="post" class="d-inline m-0">
+                      <input type="hidden" name="query_activity_id" value="<%= activity.id %>">
+                      <button type="submit" class="btn btn-link p-0 text-muted text-decoration-none small">
+                        <i class="fa-regular fa-heart me-1"></i><%= activity.likes.size %>
+                      </button>
+                    </form>
+                  <% end %>
+                  <span class="text-muted small">
+                    <i class="fa-regular fa-comment me-1"></i><%= activity.comments.size %>
+                  </span>
+                </div>
+
+                <%# Comments preview %>
+                <% visible_comments = activity.comments.sort_by(&:created_at).first(3) %>
+                <% if visible_comments.any? %>
+                  <div class="mb-2">
+                    <% visible_comments.each do |comment| %>
+                      <div class="small mb-1">
+                        <span class="fw-semibold">
+                          <%= comment.user&.username.presence || comment.user&.first_name.presence || "User" %>
+                        </span>
+                        <span class="ms-1"><%= comment.body %></span>
+                      </div>
+                    <% end %>
+                    <% if activity.comments.size > 3 %>
+                      <span class="text-muted small">and <%= activity.comments.size - 3 %> more…</span>
+                    <% end %>
+                  </div>
+                <% end %>
+
+                <%# Add comment form %>
+                <form action="/insert_comment" method="post" class="d-flex gap-2 mt-2">
+                  <input type="hidden" name="query_activity_id" value="<%= activity.id %>">
+                  <input type="text" name="query_body" class="form-control form-control-sm"
+                         placeholder="Add a comment…" required>
+                  <button type="submit" class="btn btn-outline-primary btn-sm">Post</button>
+                </form>
               </div>
             </div>
           <% end %>
@@ -82,10 +144,10 @@
       <% else %>
         <div class="text-center py-5 text-muted">
           <i class="fa-solid fa-binoculars fa-3x mb-3 opacity-25"></i>
-          <p class="mb-1">No photos in your feed yet.</p>
+          <p class="mb-1">No activities in your feed yet.</p>
           <p class="small">
             <a href="/people" class="text-primary">Follow some travelers</a>
-            to see their trip photos here.
+            to see their activities here.
           </p>
         </div>
       <% end %>

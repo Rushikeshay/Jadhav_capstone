@@ -3,6 +3,7 @@
 # Table name: users
 #
 #  id                     :bigint           not null, primary key
+#  avatar                 :string
 #  email                  :string           default(""), not null
 #  encrypted_password     :string           default(""), not null
 #  first_name             :string
@@ -34,4 +35,7 @@ class User < ApplicationRecord
   has_many :following, through: :follow_relationships, source: :followed
   has_many :follower_relationships, class_name: "Follow", foreign_key: "followed_id", dependent: :destroy
   has_many :followers, through: :follower_relationships, source: :follower
+  has_many :likes, dependent: :destroy
+  has_many :comments, dependent: :destroy
+  mount_uploader :avatar, ImageUploader
 end
