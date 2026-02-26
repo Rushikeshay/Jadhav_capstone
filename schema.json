@@ -1,0 +1,23 @@
+{
+  "name": "daily_travel_reflection_questions",
+  "strict": true,
+  "schema": {
+    "type": "object",
+    "properties": {
+      "questions": {
+        "type": "array",
+        "description": "Exactly 3 provocative questions to help a traveler reflect on their day.",
+        "items": {
+          "type": "string",
+          "description": "A single provocative reflection question phrased as a string."
+        },
+        "minItems": 3,
+        "maxItems": 3
+      }
+    },
+    "required": [
+      "questions"
+    ],
+    "additionalProperties": false
+  }
+}

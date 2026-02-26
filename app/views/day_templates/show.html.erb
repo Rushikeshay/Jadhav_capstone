@@ -10,7 +10,7 @@
   </div>
 
   <div class="row g-4">
-    <%# Activities column %>
+    <%# Left Column: Activities List & Add Form %>
     <div class="col-lg-7">
       <h2 class="h4 mb-3">Activities</h2>
 
@@ -57,7 +57,7 @@
         <p class="text-muted">No activities added yet.</p>
       <% end %>
 
-      <hr class="my-4">
+      <hr class="my-5">
 
       <h3 class="h5 mb-3">Add a New Activity</h3>
       <form action="/insert_activity" method="post" enctype="multipart/form-data">
@@ -92,19 +92,70 @@
       </form>
     </div>
 
-    <%# Map column %>
+    <%# Right Column: Map & Journal %>
     <div class="col-lg-5">
+      <%# Map Section %>
       <h3 class="h5 mb-3">Map</h3>
       <div
-        class="rounded border"
-        style="height: 500px;"
+        class="rounded border mb-4"
+        style="height: 400px;"
         data-controller="google-map"
         data-google-map-markers-value="<%= map_markers_json(@the_day.activities) %>"
         data-google-map-zoom-value="12">
       </div>
-      <p class="text-muted small mt-2">
-        Showing locations for <%= pluralize(@the_day.activities.count, "activity") %>
-      </p>
+
+      <%# Journal Section %>
+      <% existing_journal = Journal.find_by(day_id: @the_day.id, user_id: current_user.id) %>
+      
+      <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+          <h3 class="h5 mb-0">Daily Reflection</h3>
+        </div>
+        <div class="card-body">
+          <% if existing_journal.nil? %>
+            <p class="text-muted small">Let AI analyze your day and help you reflect.</p>
+            <form action="/insert_journal" method="post">
+              <input type="hidden" name="query_day_id" value="<%= @the_day.id %>">
+              <div class="d-grid">
+                <button class="btn btn-outline-primary">
+                  <i class="fa-solid fa-robot me-2"></i>Generate Questions
+                </button>
+              </div>
+            </form>
+          <% else %>
+            <div class="mb-3">
+              <p class="fw-bold mb-2 small text-primary uppercase">Reflect on these:</p>
+              <ul class="ps-3 mb-3 small">
+                <% existing_journal.ai_generated_questions.split("|").each do |question| %>
+                  <li class="mb-2"><em><%= question %></em></li>
+                <% end %>
+              </ul>
+            </div>
+
+            <form action="/modify_journal/<%= existing_journal.id %>" method="post">
+              <input type="hidden" name="query_day_id" value="<%= existing_journal.day_id %>">
+              
+              <div class="mb-3">
+                <textarea name="query_response" id="journal_response" 
+                          class="form-control" rows="8" 
+                          placeholder="Your thoughts..."><%= existing_journal.response %></textarea>
+              </div>
+
+              <div class="d-grid">
+                <button class="btn btn-success">Save Entry</button>
+              </div>
+            </form>
+
+            <div class="mt-3 text-center">
+              <a href="/delete_journal/<%= existing_journal.id %>" 
+                 class="text-danger small text-decoration-none"
+                 onclick="return confirm('Clear questions and entry?')">
+                <i class="fa-solid fa-rotate-left me-1"></i>Reset Journal
+              </a>
+            </div>
+          <% end %>
+        </div>
+      </div>
     </div>
   </div>
 </div>

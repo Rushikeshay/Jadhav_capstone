@@ -20,6 +20,7 @@ gem "appdev_support"                  # Learning helpers (nicer error messages, 
 gem "carrierwave"
 gem "cloudinary"
 gem "geocoder"
+gem "ai-chat"
 
 group :development, :test do
   gem "debug", platforms: %i[mri windows], require: "debug/prelude" # Ruby debugger
