@@ -43,13 +43,23 @@
         <div class="collapse navbar-collapse" id="mainNav">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <a class="nav-link" href="/trips">Trips</a>
+              <a class="nav-link" href="/trips">Home</a>
             </li>
+            <% if user_signed_in? %>
+              <li class="nav-item">
+                <a class="nav-link" href="/people">
+                  <i class="fa-solid fa-users me-1"></i>People
+                </a>
+              </li>
+            <% end %>
           </ul>
           <ul class="navbar-nav ms-auto">
             <% if user_signed_in? %>
               <li class="nav-item">
-                <span class="nav-link text-white-50"><i class="fa-solid fa-user me-1"></i><%= current_user.email %></span>
+                <span class="nav-link text-white-50">
+                  <i class="fa-solid fa-user me-1"></i>
+                  <%= current_user.first_name.presence || current_user.email %>
+                </span>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/users/edit">Edit Profile</a>

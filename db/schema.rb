@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_24_170836) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_26_210341) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -36,6 +36,14 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_24_170836) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "follows", force: :cascade do |t|
+    t.integer "follower_id", null: false
+    t.integer "followed_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["follower_id", "followed_id"], name: "index_follows_on_follower_id_and_followed_id", unique: true
+  end
+
   create_table "journals", force: :cascade do |t|
     t.integer "day_id"
     t.integer "user_id"
@@ -51,6 +59,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_24_170836) do
     t.integer "trip_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "role", default: "owner"
   end
 
   create_table "photos", force: :cascade do |t|
@@ -207,6 +216,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_24_170836) do
     t.string "title"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "cover_image"
   end
 
   create_table "users", force: :cascade do |t|

@@ -3,6 +3,7 @@
 # Table name: memberships
 #
 #  id         :bigint           not null, primary key
+#  role       :string           default("owner")
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  trip_id    :integer

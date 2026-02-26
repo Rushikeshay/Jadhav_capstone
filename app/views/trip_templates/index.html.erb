@@ -1,36 +1,120 @@
-<div class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="h3 mb-0">My Trips</h1>
-  </div>
+<div class="container-fluid py-4">
+  <div class="row g-4">
 
-  <div class="card shadow-sm mb-4">
-    <div class="card-header bg-primary text-white">
-      <h2 class="h5 mb-0">Start a New Adventure</h2>
-    </div>
-    <div class="card-body">
-      <form action="/insert_trip" method="post">
-        <div class="mb-3">
-          <label for="title_box" class="form-label fw-bold">Trip Title</label>
-          <input type="text" id="title_box" name="query_title" class="form-control"
-                 placeholder="e.g. Paris Summer 2026" required>
+    <%# ===== LEFT: My Trips ===== %>
+    <div class="col-md-3">
+      <h2 class="h5 fw-bold mb-3">
+        <i class="fa-solid fa-suitcase-rolling me-2 text-primary"></i>My Trips
+      </h2>
+
+      <% if @my_trips.any? %>
+        <div class="d-flex flex-column gap-2">
+          <% @my_trips.each do |a_trip| %>
+            <a href="/trips/<%= a_trip.id %>" class="text-decoration-none">
+              <div class="card shadow-sm border-0 overflow-hidden">
+                <% if a_trip.cover_image.present? %>
+                  <img src="<%= a_trip.cover_image.url %>" alt="<%= a_trip.title %>"
+                       class="card-img-top" style="height:90px;object-fit:cover;">
+                <% else %>
+                  <div class="bg-light d-flex align-items-center justify-content-center"
+                       style="height:90px;">
+                    <i class="fa-solid fa-plane fa-2x text-primary opacity-50"></i>
+                  </div>
+                <% end %>
+                <div class="card-body py-2 px-3">
+                  <p class="mb-0 fw-semibold small text-dark text-truncate">
+                    <%= a_trip.title.presence || "Trip ##{a_trip.id}" %>
+                  </p>
+                  <p class="mb-0 text-muted" style="font-size:0.7rem;">
+                    <%= time_ago_in_words(a_trip.created_at) %> ago
+                  </p>
+                </div>
+              </div>
+            </a>
+          <% end %>
         </div>
-        <button type="submit" class="btn btn-primary">
-          <i class="fa-solid fa-plus"></i> Create Trip
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <% if @list_of_trips.any? %>
-    <div class="list-group">
-      <% @list_of_trips.each do |a_trip| %>
-        <a href="/trips/<%= a_trip.id %>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-          <span><i class="fa-solid fa-plane me-2 text-primary"></i><%= a_trip.title.presence || "Trip ##{a_trip.id}" %></span>
-          <small class="text-muted"><%= time_ago_in_words(a_trip.created_at) %> ago</small>
-        </a>
+      <% else %>
+        <p class="text-muted small">No trips yet — start one!</p>
       <% end %>
     </div>
-  <% else %>
-    <p class="text-muted">No trips yet. Create your first one above!</p>
-  <% end %>
+
+    <%# ===== CENTER: Social Feed ===== %>
+    <div class="col-md-6">
+      <h2 class="h5 fw-bold mb-3">
+        <i class="fa-solid fa-images me-2 text-primary"></i>Travel Feed
+      </h2>
+
+      <% if @feed_photos.any? %>
+        <div class="d-flex flex-column gap-3">
+          <% @feed_photos.each do |photo| %>
+            <% activity = photo.activity %>
+            <% day = activity.day %>
+            <% trip = day.trip %>
+            <% owner_membership = trip.memberships.find { |m| m.role == "owner" } %>
+            <% owner = owner_membership ? User.find_by(id: owner_membership.user_id) : nil %>
+
+            <div class="card shadow-sm border-0 overflow-hidden">
+              <% if photo.image.present? %>
+                <img src="<%= photo.image.url %>" alt="<%= photo.caption %>"
+                     class="card-img-top" style="max-height:320px;object-fit:cover;">
+              <% end %>
+              <div class="card-body">
+                <% if photo.caption.present? %>
+                  <p class="card-text mb-2"><%= photo.caption %></p>
+                <% end %>
+                <p class="text-muted small mb-0">
+                  <i class="fa-solid fa-location-dot me-1"></i><%= activity.name %>
+                  &nbsp;&middot;&nbsp;
+                  <i class="fa-solid fa-plane me-1"></i>
+                  <a href="/trips/<%= trip.id %>" class="text-decoration-none text-muted fw-semibold">
+                    <%= trip.title.presence || "Trip ##{trip.id}" %>
+                  </a>
+                  <% if owner %>
+                    &nbsp;&middot;&nbsp;
+                    <i class="fa-solid fa-user me-1"></i>
+                    <%= [owner.first_name, owner.last_name].compact.join(" ").presence || owner.email %>
+                  <% end %>
+                </p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="text-center py-5 text-muted">
+          <i class="fa-solid fa-binoculars fa-3x mb-3 opacity-25"></i>
+          <p class="mb-1">No photos in your feed yet.</p>
+          <p class="small">
+            <a href="/people" class="text-primary">Follow some travelers</a>
+            to see their trip photos here.
+          </p>
+        </div>
+      <% end %>
+    </div>
+
+    <%# ===== RIGHT: Start New Adventure ===== %>
+    <div class="col-md-3">
+      <h2 class="h5 fw-bold mb-3">
+        <i class="fa-solid fa-plus-circle me-2 text-primary"></i>New Adventure
+      </h2>
+
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <form action="/insert_trip" method="post" enctype="multipart/form-data">
+            <div class="mb-2">
+              <input type="text" name="query_title" class="form-control form-control-sm"
+                     placeholder="Trip title…" required>
+            </div>
+            <div class="mb-2">
+              <label class="form-label small text-muted mb-1">Cover photo (optional)</label>
+              <input type="file" name="cover_image" accept="image/*" class="form-control form-control-sm">
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm w-100">
+              <i class="fa-solid fa-plus me-1"></i>Create Trip
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>

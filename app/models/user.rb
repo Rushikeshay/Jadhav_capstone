@@ -23,9 +23,14 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-  # Direct Associations 
-  has_many  :memberships, class_name: "Membership", foreign_key: "user_id", dependent: :destroy
-  has_many  :journals, class_name: "Journal", foreign_key: "user_id", dependent: :destroy
+  # Direct Associations
+  has_many :memberships, class_name: "Membership", foreign_key: "user_id", dependent: :destroy
+  has_many :journals, class_name: "Journal", foreign_key: "user_id", dependent: :destroy
   # Indirect Associations
   has_many :trips, through: :memberships, source: :trip
+  # Social following
+  has_many :follow_relationships, class_name: "Follow", foreign_key: "follower_id", dependent: :destroy
+  has_many :following, through: :follow_relationships, source: :followed
+  has_many :follower_relationships, class_name: "Follow", foreign_key: "followed_id", dependent: :destroy
+  has_many :followers, through: :follower_relationships, source: :follower
 end

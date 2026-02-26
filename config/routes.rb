@@ -100,6 +100,19 @@ Rails.application.routes.draw do
 
   #------------------------------
 
+  # Routes for social following:
+
+  # CREATE
+  post("/follow_user",           { :controller => "follows", :action => "create" })
+
+  # READ
+  get("/people",                 { :controller => "follows", :action => "index" })
+
+  # DELETE
+  get("/unfollow_user/:path_id", { :controller => "follows", :action => "destroy" })
+
+  #------------------------------
+
   devise_for :users
   # This is a blank app! Pick your first screen, build out the RCAV, and go from there. E.g.:
   # get("/your_first_screen", { :controller => "pages", :action => "first" })
