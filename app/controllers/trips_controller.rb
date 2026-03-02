@@ -1,6 +1,10 @@
 class TripsController < ApplicationController
   def index
     @my_trips = current_user.trips.order({ :created_at => :desc })
+    @my_journals = current_user.journals
+                               .includes({ :day => :trip })
+                               .order({ :created_at => :desc })
+                               .limit(10)
 
     followed_ids = current_user.following.pluck(:id)
     if followed_ids.any?

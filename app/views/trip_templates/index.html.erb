@@ -176,6 +176,41 @@
           </form>
         </div>
       </div>
+
+      <%# ===== My Journal Entries ===== %>
+      <h2 class="h5 fw-bold mb-3 mt-4">
+        <i class="fa-solid fa-book me-2 text-primary"></i>My Journal Entries
+      </h2>
+
+      <% if @my_journals.any? %>
+        <div class="d-flex flex-column gap-2">
+          <% @my_journals.each do |journal| %>
+            <a href="/journals/<%= journal.id %>" class="text-decoration-none">
+              <div class="card shadow-sm border-0">
+                <div class="card-body py-2 px-3">
+                  <p class="mb-0 fw-semibold small text-dark text-truncate">
+                    <%= journal.day&.trip&.title.presence || "Trip" %>
+                    &middot;
+                    <%= journal.day&.date&.strftime("%b %d, %Y") || "Day ##{journal.day_id}" %>
+                  </p>
+                  <% if journal.response.present? %>
+                    <p class="mb-0 text-muted" style="font-size:0.7rem;">
+                      <%= truncate(journal.response, length: 80) %>
+                    </p>
+                  <% else %>
+                    <p class="mb-0 text-muted fst-italic" style="font-size:0.7rem;">No response yet</p>
+                  <% end %>
+                  <p class="mb-0 text-muted" style="font-size:0.65rem;">
+                    <%= time_ago_in_words(journal.created_at) %> ago
+                  </p>
+                </div>
+              </div>
+            </a>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-muted small">No journal entries yet.</p>
+      <% end %>
     </div>
 
   </div>
