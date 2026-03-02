@@ -1,99 +1,48 @@
-<h1>
-  List of all activities
-</h1>
+<div class="container py-4">
 
-<hr>
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 class="h4 fw-bold mb-0">
+      <i class="fa-solid fa-location-dot me-2 text-primary"></i>All Activities
+    </h1>
+    <a href="/trips" class="btn btn-outline-secondary btn-sm">
+      <i class="fa-solid fa-arrow-left me-1"></i>Home
+    </a>
+  </div>
 
-<article>
-  <header>
-    <h2>
-      Add a new activity
-    </h2>
-  </header>
-
-  <form action="/insert_activity" method="post">
-    <div>
-      <label for="name_box">
-        Name
-      </label>
-
-      <input type="text" id="name_box" name="query_name">
-    </div>
-
-    <div>
-      <label for="picture_box">
-        Picture
-      </label>
-
-      <input type="text" id="picture_box" name="query_picture">
-    </div>
-
-    <div>
-      <label for="address_box">
-        Address
-      </label>
-
-      <input type="text" id="address_box" name="query_address">
-    </div>
-
-    <div>
-      <label for="notes_box">
-        Notes
-      </label>
-
-      <input type="text" id="notes_box" name="query_notes">
-    </div>
-
-    <div>
-      <label for="any_cost_box">
-        Any cost
-      </label>
-
-      <input type="text" id="any_cost_box" name="query_any_cost">
-    </div>
-
-    <div>
-      <label for="cost_box">
-        Cost
-      </label>
-
-      <input type="text" id="cost_box" name="query_cost">
-    </div>
-
-    <div>
-      <label for="picture_caption_box">
-        Picture caption
-      </label>
-
-      <input type="text" id="picture_caption_box" name="query_picture_caption">
-    </div>
-
-    <div>
-      <label for="day_id_box">
-        Day
-      </label>
-
-      <input type="text" id="day_id_box" name="query_day_id">
-    </div>
-
-    <button type="submit">
-      Create activity
-    </button>
-  </form>
-</article>
-
-<hr>
-
-<article>
-  <ul>
-    <% @list_of_activities.each do |an_activity| %>
-      <li>
-        <a href="/activities/<%= an_activity.id %>">
-          Activity #<%= an_activity.id %>
+  <% if @list_of_activities.any? %>
+    <div class="d-flex flex-column gap-2">
+      <% @list_of_activities.each do |activity| %>
+        <% day  = activity.day %>
+        <% trip = day&.trip %>
+        <a href="/activities/<%= activity.id %>" class="text-decoration-none">
+          <div class="card border-0 shadow-sm">
+            <div class="card-body py-2 px-3 d-flex align-items-center justify-content-between">
+              <div class="overflow-hidden">
+                <p class="mb-0 fw-semibold small text-dark text-truncate">
+                  <%= activity.name.presence || "Activity ##{activity.id}" %>
+                </p>
+                <p class="mb-0 text-muted" style="font-size:0.72rem;">
+                  <% if trip %>
+                    <i class="fa-solid fa-plane me-1"></i><%= trip.title.presence || "Trip ##{trip.id}" %>
+                    &nbsp;&middot;&nbsp;
+                  <% end %>
+                  <% if day&.date %>
+                    <i class="fa-regular fa-calendar me-1"></i><%= day.date.strftime("%b %-d, %Y") %>
+                  <% end %>
+                </p>
+              </div>
+              <i class="fa-solid fa-chevron-right text-muted ms-3" style="font-size:0.75rem;flex-shrink:0;"></i>
+            </div>
+          </div>
         </a>
-      </li>
-    <% end %>
-  </ul>
-</article>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="app-empty">
+      <i class="fa-solid fa-location-dot fa-3x"></i>
+      <p>No activities yet.</p>
+      <a href="/trips" class="btn btn-primary btn-sm">Go to your trips</a>
+    </div>
+  <% end %>
 
-<hr>
+</div>

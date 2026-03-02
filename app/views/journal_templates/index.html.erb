@@ -1,75 +1,53 @@
-<h1>
-  List of all journals
-</h1>
+<div class="container py-4">
 
-<hr>
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h1 class="h4 fw-bold mb-0">
+      <i class="fa-solid fa-book me-2 text-primary"></i>Journal Entries
+    </h1>
+    <a href="/trips" class="btn btn-outline-secondary btn-sm">
+      <i class="fa-solid fa-arrow-left me-1"></i>Home
+    </a>
+  </div>
 
-<article>
-  <header>
-    <h2>
-      Add a new journal
-    </h2>
-  </header>
+  <% if @list_of_journals.any? %>
+    <div class="row g-3">
+      <% @list_of_journals.each do |journal| %>
+        <% day  = journal.day %>
+        <% trip = day&.trip %>
+        <div class="col-md-6 col-lg-4">
+          <a href="/journals/<%= journal.id %>" class="text-decoration-none">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <p class="fw-semibold small text-dark mb-1 text-truncate">
+                  <%= trip&.title.presence || "Trip" %>
+                  &nbsp;&middot;&nbsp;
+                  <%= day&.date&.strftime("%b %-d, %Y") || "Day ##{journal.day_id}" %>
+                </p>
 
-  <form action="/insert_journal" method="post">
-    <div>
-      <label for="day_id_box">
-        Day
-      </label>
+                <% if journal.response.present? %>
+                  <p class="text-muted small mb-2" style="display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;">
+                    <%= journal.response %>
+                  </p>
+                <% else %>
+                  <p class="text-muted small fst-italic mb-2">No response written yet.</p>
+                <% end %>
 
-      <input type="text" id="day_id_box" name="query_day_id">
+                <p class="mb-0 text-muted" style="font-size:0.67rem;">
+                  <i class="fa-regular fa-clock me-1"></i><%= time_ago_in_words(journal.created_at) %> ago
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+      <% end %>
     </div>
-
-    <div>
-      <label for="user_id_box">
-        User
-      </label>
-
-      <input type="text" id="user_id_box" name="query_user_id">
+  <% else %>
+    <div class="app-empty">
+      <i class="fa-solid fa-book fa-3x"></i>
+      <p>No journal entries yet.</p>
+      <p class="small">Journal entries are created from a day page after adding activities.</p>
+      <a href="/trips" class="btn btn-primary btn-sm">Go to your trips</a>
     </div>
+  <% end %>
 
-    <div>
-      <label for="ai_generated_questions_box">
-        Ai generated questions
-      </label>
-
-      <input type="text" id="ai_generated_questions_box" name="query_ai_generated_questions">
-    </div>
-
-    <div>
-      <label for="response_box">
-        Response
-      </label>
-
-      <input type="text" id="response_box" name="query_response">
-    </div>
-
-    <div>
-      <label for="best_activity_id_box">
-        Best activity
-      </label>
-
-      <input type="text" id="best_activity_id_box" name="query_best_activity_id">
-    </div>
-
-    <button type="submit">
-      Create journal
-    </button>
-  </form>
-</article>
-
-<hr>
-
-<article>
-  <ul>
-    <% @list_of_journals.each do |a_journal| %>
-      <li>
-        <a href="/journals/<%= a_journal.id %>">
-          Journal #<%= a_journal.id %>
-        </a>
-      </li>
-    <% end %>
-  </ul>
-</article>
-
-<hr>
+</div>

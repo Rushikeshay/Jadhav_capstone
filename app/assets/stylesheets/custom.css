@@ -1,0 +1,217 @@
+/* ============================================================
+   TRAVEL APP — CENTRAL STYLESHEET
+   Brand color: Coral #f97316
+   ============================================================ */
+
+
+/* ── 1. CSS Variables ───────────────────────────────────────── */
+
+:root {
+  /* Brand palette */
+  --app-primary:         #f97316;
+  --app-primary-dark:    #ea6c0a;
+  --app-primary-darker:  #c2590a;
+  --app-primary-rgb:     249, 115, 22;
+
+  /* Override Bootstrap primary everywhere (bg-primary, text-primary, etc.) */
+  --bs-primary:          #f97316;
+  --bs-primary-rgb:      249, 115, 22;
+  --bs-link-color:       #f97316;
+  --bs-link-color-rgb:   249, 115, 22;
+  --bs-link-hover-color: #ea6c0a;
+}
+
+
+/* ── 2. Bootstrap component overrides ───────────────────────── */
+
+/* Primary buttons */
+.btn-primary {
+  --bs-btn-color:              #fff;
+  --bs-btn-bg:                 #f97316;
+  --bs-btn-border-color:       #f97316;
+  --bs-btn-hover-color:        #fff;
+  --bs-btn-hover-bg:           #ea6c0a;
+  --bs-btn-hover-border-color: #ea6c0a;
+  --bs-btn-active-color:       #fff;
+  --bs-btn-active-bg:          #c2590a;
+  --bs-btn-active-border-color:#c2590a;
+  --bs-btn-disabled-color:     #fff;
+  --bs-btn-disabled-bg:        #f97316;
+  --bs-btn-disabled-border-color: #f97316;
+}
+
+/* Outline primary buttons */
+.btn-outline-primary {
+  --bs-btn-color:              #f97316;
+  --bs-btn-border-color:       #f97316;
+  --bs-btn-hover-color:        #fff;
+  --bs-btn-hover-bg:           #f97316;
+  --bs-btn-hover-border-color: #f97316;
+  --bs-btn-active-color:       #fff;
+  --bs-btn-active-bg:          #f97316;
+  --bs-btn-active-border-color:#f97316;
+  --bs-btn-focus-shadow-rgb:   249, 115, 22;
+}
+
+
+/* ── 3. Card image height utilities ─────────────────────────── */
+/* Use these classes instead of inline style="height:Xpx;object-fit:cover" */
+
+.card-img-h-sm {
+  height: 90px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.card-img-h-md {
+  height: 120px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.card-img-h-lg {
+  height: 200px;
+  object-fit: cover;
+  width: 100%;
+}
+
+.card-img-h-xl {
+  height: 320px;
+  object-fit: cover;
+  width: 100%;
+}
+
+
+/* ── 4. Page hero (trip show banner) ────────────────────────── */
+
+.app-hero {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  background: #1a1a2e;
+}
+
+.app-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.7;
+}
+
+.app-hero__placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-hero__title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 1rem;
+  color: #fff;
+}
+
+.app-hero__title h1 {
+  font-weight: 700;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+  margin-bottom: 0;
+}
+
+.app-hero__title p {
+  margin-bottom: 0;
+  opacity: 0.8;
+  font-size: 0.875rem;
+}
+
+.app-hero__actions-start {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 0.75rem;
+}
+
+.app-hero__actions-end {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.75rem;
+}
+
+
+/* ── 5. Auth pages (sign-in / sign-up / edit profile) ───────── */
+
+.app-auth-card {
+  max-width: 480px;
+  margin: 2rem auto;
+}
+
+.app-auth-card .card {
+  border-radius: 0.75rem;
+}
+
+
+/* ── 6. Empty states ────────────────────────────────────────── */
+
+.app-empty {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6c757d;
+}
+
+.app-empty i {
+  opacity: 0.25;
+  margin-bottom: 1rem;
+  display: block;
+}
+
+
+/* ── 7. Section headers (title left, action button right) ───── */
+
+.app-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.app-section-header h2,
+.app-section-header h3 {
+  margin-bottom: 0;
+}
+
+
+/* ── 8. Navbar tweaks ───────────────────────────────────────── */
+
+.navbar-brand {
+  letter-spacing: -0.01em;
+}
+
+.navbar-brand i {
+  opacity: 0.85;
+}
+
+
+/* ── 9. Legacy image utilities (keep for compatibility) ─────── */
+
+.img-cover {
+  object-fit: cover;
+  object-position: center;
+}
+
+.img-small {
+  width: 36px;
+  height: 36px;
+}
+
+.img-medium {
+  width: 128px;
+  height: 128px;
+}
+
+.img-large {
+  width: 200px;
+  height: 200px;
+}
