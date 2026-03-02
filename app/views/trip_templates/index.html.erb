@@ -52,7 +52,7 @@
             <% owner = @trip_owners[trip.id] %>
             <% my_like = activity.likes.find { |l| l.user_id == current_user.id } %>
 
-            <div class="card shadow-sm border-0 overflow-hidden">
+            <div id="<%= dom_id(activity) %>" class="card shadow-sm border-0 overflow-hidden">
               <%# Activity picture %>
               <% if activity.picture.present? %>
                 <img src="<%= activity.picture.url %>" alt="<%= activity.name %>"
@@ -96,7 +96,8 @@
                 <div class="d-flex align-items-center gap-3 mb-2">
                   <% if my_like %>
                     <a href="/unlike_activity/<%= my_like.id %>"
-                       class="text-danger text-decoration-none small">
+                       class="text-danger text-decoration-none small"
+                       data-turbo-method="delete">
                       <i class="fa-solid fa-heart me-1"></i><%= activity.likes.size %>
                     </a>
                   <% else %>

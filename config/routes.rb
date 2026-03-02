@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   post("/modify_journal/:path_id", { :controller => "journals", :action => "update" })
 
   # DELETE
-  get("/delete_journal/:path_id", { :controller => "journals", :action => "destroy" })
+  delete("/delete_journal/:path_id", { :controller => "journals", :action => "destroy" })
 
   #------------------------------
 
@@ -39,7 +39,7 @@ Rails.application.routes.draw do
   post("/modify_membership/:path_id", { :controller => "memberships", :action => "update" })
 
   # DELETE
-  get("/delete_membership/:path_id", { :controller => "memberships", :action => "destroy" })
+  delete("/delete_membership/:path_id", { :controller => "memberships", :action => "destroy" })
 
   #------------------------------
 
@@ -58,7 +58,7 @@ Rails.application.routes.draw do
   post("/modify_activity/:path_id", { :controller => "activities", :action => "update" })
 
   # DELETE
-  get("/delete_activity/:path_id", { :controller => "activities", :action => "destroy" })
+  delete("/delete_activity/:path_id", { :controller => "activities", :action => "destroy" })
 
   #------------------------------
 
@@ -77,7 +77,7 @@ Rails.application.routes.draw do
   post("/modify_day/:path_id", { :controller => "days", :action => "update" })
 
   # DELETE
-  get("/delete_day/:path_id", { :controller => "days", :action => "destroy" })
+  delete("/delete_day/:path_id", { :controller => "days", :action => "destroy" })
 
   #------------------------------
 
@@ -96,7 +96,7 @@ Rails.application.routes.draw do
   post("/modify_trip/:path_id", { :controller => "trips", :action => "update" })
 
   # DELETE
-  get("/delete_trip/:path_id", { :controller => "trips", :action => "destroy" })
+  delete("/delete_trip/:path_id", { :controller => "trips", :action => "destroy" })
 
   # Routes for social following:
 
@@ -107,15 +107,15 @@ Rails.application.routes.draw do
   get("/people",                 { :controller => "follows", :action => "index" })
 
   # DELETE
-  get("/unfollow_user/:path_id", { :controller => "follows", :action => "destroy" })
+  delete("/unfollow_user/:path_id", { :controller => "follows", :action => "destroy" })
 
   # Routes for likes:
   post("/like_activity",           { :controller => "likes", :action => "create" })
-  get("/unlike_activity/:path_id", { :controller => "likes", :action => "destroy" })
+  delete("/unlike_activity/:path_id", { :controller => "likes", :action => "destroy" })
 
   # Routes for comments:
   post("/insert_comment",          { :controller => "comments", :action => "create" })
-  get("/delete_comment/:path_id",  { :controller => "comments", :action => "destroy" })
+  delete("/delete_comment/:path_id",  { :controller => "comments", :action => "destroy" })
   devise_for :users
   # This is a blank app! Pick your first screen, build out the RCAV, and go from there. E.g.:
   # get("/your_first_screen", { :controller => "pages", :action => "first" })

@@ -7,6 +7,7 @@
     </a>
     <a href="/delete_journal/<%= @the_journal.id %>"
        class="btn btn-outline-danger btn-sm"
+       data-turbo-method="delete"
        onclick="return confirm('Delete this journal entry?')">
       <i class="fa-solid fa-trash me-1"></i>Delete
     </a>

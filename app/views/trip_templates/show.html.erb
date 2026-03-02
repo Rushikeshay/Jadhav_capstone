@@ -17,6 +17,7 @@
   </div>
   <div class="position-absolute top-0 end-0 p-3">
     <a href="/delete_trip/<%= @the_trip.id %>" class="btn btn-sm btn-danger"
+       data-turbo-method="delete"
        onclick="return confirm('Delete this trip and all its days?')">
       <i class="fa-solid fa-trash"></i>
     </a>
@@ -79,7 +80,7 @@
     <div class="row g-3 mb-5">
       <% @the_trip.days.sort_by { |d| d.date || Date.new(0) }.each do |day| %>
         <% first_pic = day.activities.find { |a| a.picture.present? }&.picture %>
-        <div class="col-6 col-md-4">
+        <div id="<%= dom_id(day) %>" class="col-6 col-md-4">
           <a href="/days/<%= day.id %>" class="text-decoration-none">
             <div class="card h-100 border-0 shadow-sm overflow-hidden">
               <% if first_pic %>

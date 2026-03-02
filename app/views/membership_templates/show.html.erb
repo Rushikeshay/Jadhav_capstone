@@ -10,7 +10,9 @@
   </div>
 
   <div>
-    <a href="/delete_membership/<%= @the_membership.id %>">
+    <a href="/delete_membership/<%= @the_membership.id %>"
+       data-turbo-method="delete"
+       onclick="return confirm('Delete this membership?')">
       Delete membership
     </a>
   </div>

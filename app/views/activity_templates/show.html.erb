@@ -48,7 +48,7 @@
         </div>
       </div>
 
-      <a href="/delete_activity/<%= @the_activity.id %>" class="text-danger small" onclick="return confirm('Delete this activity?')">
+      <a href="/delete_activity/<%= @the_activity.id %>" class="text-danger small" data-turbo-method="delete" onclick="return confirm('Delete this activity?')">
         Delete Activity
       </a>
     </div>

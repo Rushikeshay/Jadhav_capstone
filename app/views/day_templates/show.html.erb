@@ -4,6 +4,7 @@
       <i class="fa-solid fa-arrow-left"></i> Back to Trip
     </a>
     <a href="/delete_day/<%= @the_day.id %>" class="btn btn-outline-danger btn-sm"
+       data-turbo-method="delete"
        onclick="return confirm('Delete this day?')">
       <i class="fa-solid fa-trash"></i> Delete Day
     </a>
@@ -170,8 +171,9 @@
             </form>
 
             <div class="mt-3 text-center">
-              <a href="/delete_journal/<%= existing_journal.id %>" 
+              <a href="/delete_journal/<%= existing_journal.id %>"
                  class="text-danger small text-decoration-none"
+                 data-turbo-method="delete"
                  onclick="return confirm('Clear questions and entry?')">
                 <i class="fa-solid fa-rotate-left me-1"></i>Reset Journal
               </a>

@@ -26,7 +26,8 @@
               <div class="flex-shrink-0">
                 <% if @following_ids.include?(a_user.id) %>
                   <a href="/unfollow_user/<%= @follow_map[a_user.id] %>"
-                     class="btn btn-outline-secondary btn-sm">
+                     class="btn btn-outline-secondary btn-sm"
+                     data-turbo-method="delete">
                     <i class="fa-solid fa-user-minus me-1"></i>Unfollow
                   </a>
                 <% else %>
