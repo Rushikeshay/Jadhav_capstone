@@ -1,108 +1,151 @@
-<div class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <a href="/trips" class="btn btn-outline-secondary btn-sm">
-      <i class="fa-solid fa-arrow-left"></i> All Trips
+<%# ===== HERO HEADER ===== %>
+<div class="position-relative mb-4" style="height:220px;overflow:hidden;background:#1a1a2e;">
+  <% if @the_trip.cover_image.present? %>
+    <img src="<%= @the_trip.cover_image.url %>" alt="<%= @the_trip.title %>"
+         style="width:100%;height:100%;object-fit:cover;opacity:0.7;">
+  <% else %>
+    <div class="w-100 h-100 d-flex align-items-center justify-content-center">
+      <i class="fa-solid fa-plane fa-4x text-white opacity-25"></i>
+    </div>
+  <% end %>
+
+  <%# Back + Delete buttons %>
+  <div class="position-absolute top-0 start-0 p-3">
+    <a href="/trips" class="btn btn-sm btn-light bg-white bg-opacity-75">
+      <i class="fa-solid fa-arrow-left me-1"></i>All Trips
     </a>
-    <a href="/delete_trip/<%= @the_trip.id %>" class="btn btn-outline-danger btn-sm"
+  </div>
+  <div class="position-absolute top-0 end-0 p-3">
+    <a href="/delete_trip/<%= @the_trip.id %>" class="btn btn-sm btn-danger"
        onclick="return confirm('Delete this trip and all its days?')">
-      <i class="fa-solid fa-trash"></i> Delete Trip
+      <i class="fa-solid fa-trash"></i>
     </a>
   </div>
 
-  <div class="row g-4">
-    <%# Trip details + edit %>
-    <div class="col-md-5">
-      <div class="card shadow-sm mb-4">
-        <div class="card-header bg-primary text-white">
-          <h1 class="h5 mb-0"><%= @the_trip.title.presence || "Trip ##{@the_trip.id}" %></h1>
-        </div>
-        <div class="card-body">
-          <dl class="row mb-0">
-            <dt class="col-sm-4">Created</dt>
-            <dd class="col-sm-8 text-muted"><%= time_ago_in_words(@the_trip.created_at) %> ago</dd>
-            <dt class="col-sm-4">Updated</dt>
-            <dd class="col-sm-8 text-muted"><%= time_ago_in_words(@the_trip.updated_at) %> ago</dd>
-          </dl>
-        </div>
-      </div>
+  <%# Trip title + created date %>
+  <div class="position-absolute bottom-0 start-0 p-3 text-white">
+    <h1 class="fw-bold mb-0" style="text-shadow:0 1px 4px rgba(0,0,0,.6);">
+      <%= @the_trip.title.presence || "Trip ##{@the_trip.id}" %>
+    </h1>
+    <p class="mb-0 small opacity-75">
+      <i class="fa-regular fa-clock me-1"></i>Created <%= time_ago_in_words(@the_trip.created_at) %> ago
+    </p>
+  </div>
+</div>
 
-      <div class="card shadow-sm">
-        <div class="card-header">
-          <h2 class="h6 mb-0">Edit Trip</h2>
-        </div>
-        <div class="card-body">
-          <% if @the_trip.cover_image.present? %>
-            <img src="<%= @the_trip.cover_image.url %>" alt="Cover"
-                 class="img-fluid rounded mb-3" style="max-height:180px;object-fit:cover;width:100%;">
-          <% end %>
-          <form action="/modify_trip/<%= @the_trip.id %>" method="post" enctype="multipart/form-data">
-            <div class="mb-3">
-              <label for="title_box" class="form-label fw-bold">Title</label>
-              <input type="text" id="title_box" name="query_title"
-                     value="<%= @the_trip.title %>" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label class="form-label fw-bold">Cover Photo</label>
-              <input type="file" name="cover_image" accept="image/*" class="form-control">
-              <% if @the_trip.cover_image.present? %>
-                <div class="form-text text-muted">Upload a new image to replace the current one.</div>
-              <% end %>
-            </div>
-            <button type="submit" class="btn btn-success">Update Trip</button>
-          </form>
-        </div>
-      </div>
-    </div>
+<div class="container pb-5">
 
-    <%# Days list + add day %>
-    <div class="col-md-7">
-      <div class="card shadow-sm mb-4">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h2 class="h6 mb-0">Days</h2>
-        </div>
-        <div class="card-body p-0">
-          <% if @the_trip.days.any? %>
-            <div class="list-group list-group-flush">
-              <% @the_trip.days.order(:date).each do |day| %>
-                <a href="/days/<%= day.id %>" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                  <span>
-                    <i class="fa-regular fa-calendar me-2 text-primary"></i>
-                    <%= day.date&.strftime("%B %-d, %Y") || "Day ##{day.id}" %>
-                    <% if day.title.present? %>
-                      <span class="text-muted ms-2">— <%= day.title %></span>
-                    <% end %>
-                  </span>
-                  <span class="badge bg-secondary rounded-pill"><%= day.activities.count %> activities</span>
-                </a>
-              <% end %>
-            </div>
-          <% else %>
-            <p class="text-muted p-3 mb-0">No days added yet.</p>
-          <% end %>
-        </div>
-      </div>
+  <%# ===== DAYS SECTION ===== %>
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h2 class="h5 fw-bold mb-0">
+      <i class="fa-regular fa-calendar me-2 text-primary"></i>Days
+    </h2>
+    <button class="btn btn-outline-primary btn-sm" type="button"
+            data-bs-toggle="collapse" data-bs-target="#addDayForm"
+            aria-expanded="false">
+      <i class="fa-solid fa-plus me-1"></i>Add Day
+    </button>
+  </div>
 
-      <div class="card shadow-sm">
-        <div class="card-header">
-          <h3 class="h6 mb-0">Add a Day</h3>
-        </div>
-        <div class="card-body">
-          <form action="/insert_day" method="post">
-            <input type="hidden" name="query_trip_id" value="<%= @the_trip.id %>">
-            <div class="mb-3">
-              <label for="date_box" class="form-label fw-bold">Date</label>
-              <input type="date" id="date_box" name="query_date" class="form-control" required>
-            </div>
-            <div class="mb-3">
-              <label for="day_title_box" class="form-label fw-bold">Title <span class="text-muted fw-normal">(optional)</span></label>
-              <input type="text" id="day_title_box" name="query_title" class="form-control" placeholder="e.g. Arrival Day, Beach Day...">
-            </div>
-            <button type="submit" class="btn btn-primary">
-              <i class="fa-solid fa-plus"></i> Add Day
+  <%# Add Day inline form (collapsed by default) %>
+  <div class="collapse mb-4" id="addDayForm">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body py-3">
+        <form action="/insert_day" method="post" class="row g-2 align-items-end">
+          <input type="hidden" name="query_trip_id" value="<%= @the_trip.id %>">
+          <div class="col-auto">
+            <label class="form-label small fw-semibold mb-1">Date</label>
+            <input type="date" name="query_date" class="form-control form-control-sm" required>
+          </div>
+          <div class="col">
+            <label class="form-label small fw-semibold mb-1">
+              Title <span class="text-muted fw-normal">(optional)</span>
+            </label>
+            <input type="text" name="query_title" class="form-control form-control-sm"
+                   placeholder="e.g. Arrival Day, Beach Day…">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary btn-sm">
+              <i class="fa-solid fa-plus me-1"></i>Add Day
             </button>
-          </form>
-        </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+
+  <%# Day cards grid %>
+  <% if @the_trip.days.any? %>
+    <div class="row g-3 mb-5">
+      <% @the_trip.days.sort_by { |d| d.date || Date.new(0) }.each do |day| %>
+        <% first_pic = day.activities.find { |a| a.picture.present? }&.picture %>
+        <div class="col-6 col-md-4">
+          <a href="/days/<%= day.id %>" class="text-decoration-none">
+            <div class="card h-100 border-0 shadow-sm overflow-hidden">
+              <% if first_pic %>
+                <img src="<%= first_pic.url %>" alt="day photo"
+                     class="card-img-top" style="height:120px;object-fit:cover;">
+              <% else %>
+                <div class="bg-light d-flex align-items-center justify-content-center"
+                     style="height:120px;">
+                  <i class="fa-regular fa-image fa-2x text-muted opacity-50"></i>
+                </div>
+              <% end %>
+              <div class="card-body py-2 px-3">
+                <p class="fw-semibold mb-0 small text-dark text-truncate">
+                  <%= day.title.presence || "Day ##{day.id}" %>
+                </p>
+                <p class="mb-0 text-muted" style="font-size:0.72rem;">
+                  <i class="fa-regular fa-calendar me-1"></i><%= day.date&.strftime("%b %-d, %Y") %>
+                </p>
+                <p class="mb-0 text-muted" style="font-size:0.67rem;">
+                  <%= pluralize(day.activities.size, "activity") %>
+                </p>
+              </div>
+            </div>
+          </a>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-5 text-muted mb-4">
+      <i class="fa-regular fa-calendar fa-3x mb-3 opacity-25"></i>
+      <p>No days yet — click <strong>Add Day</strong> to get started.</p>
+    </div>
+  <% end %>
+
+  <%# ===== EDIT TRIP (collapsed, bottom) ===== %>
+  <hr>
+  <button class="btn btn-link btn-sm text-muted text-decoration-none p-0 mb-2"
+          type="button" data-bs-toggle="collapse" data-bs-target="#editTripForm">
+    <i class="fa-solid fa-pen me-1"></i>Edit trip details
+  </button>
+
+  <div class="collapse" id="editTripForm">
+    <div class="card border-0 shadow-sm mt-2">
+      <div class="card-body">
+        <% if @the_trip.cover_image.present? %>
+          <img src="<%= @the_trip.cover_image.url %>" alt="Cover"
+               class="img-fluid rounded mb-3" style="max-height:140px;object-fit:cover;width:100%;">
+        <% end %>
+        <form action="/modify_trip/<%= @the_trip.id %>" method="post"
+              enctype="multipart/form-data" class="row g-2 align-items-end">
+          <div class="col">
+            <label class="form-label small fw-semibold mb-1">Title</label>
+            <input type="text" name="query_title" value="<%= @the_trip.title %>"
+                   class="form-control form-control-sm">
+          </div>
+          <div class="col-auto">
+            <label class="form-label small fw-semibold mb-1">Cover photo</label>
+            <input type="file" name="cover_image" accept="image/*"
+                   class="form-control form-control-sm">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-success btn-sm">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
 </div>

@@ -33,9 +33,7 @@ class TripsController < ApplicationController
   def show
     the_id = params.fetch("path_id")
 
-    matching_trips = Trip.where({ :id => the_id })
-
-    @the_trip = matching_trips.at(0)
+    @the_trip = Trip.includes({ :days => :activities }).where({ :id => the_id }).at(0)
 
     render({ :template => "trip_templates/show" })
   end
