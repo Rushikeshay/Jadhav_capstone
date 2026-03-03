@@ -12,7 +12,7 @@
           <h2 class="h5 mb-0">Edit Activity Details</h2>
         </div>
         <div class="card-body">
-          <form action="/modify_activity/<%= @the_activity.id %>" method="post">
+          <form action="/modify_activity/<%= @the_activity.id %>" method="post" enctype="multipart/form-data">
             <div class="mb-3">
               <label for="name_box" class="form-label fw-bold">Name</label>
               <input type="text" id="name_box" name="query_name" value="<%= @the_activity.name %>" class="form-control">
@@ -41,8 +41,24 @@
 
             <input type="hidden" name="query_day_id" value="<%= @the_activity.day_id %>">
 
+            <div class="mb-3">
+              <label class="form-label fw-bold">Photo</label>
+              <% if @the_activity.picture.present? %>
+                <img src="<%= @the_activity.picture.url %>" class="d-block img-fluid rounded mb-2"
+                     style="max-height:160px;object-fit:cover;width:100%;" alt="Current photo">
+              <% end %>
+              <input type="file" name="query_picture" class="form-control" accept="image/*">
+            </div>
+
+            <div class="mb-3">
+              <label for="caption_box" class="form-label fw-bold">Photo Caption</label>
+              <input type="text" id="caption_box" name="query_picture_caption"
+                     value="<%= @the_activity.picture_caption %>" class="form-control"
+                     placeholder="Describe this photo...">
+            </div>
+
             <div class="d-grid">
-              <button type="submit" class="btn btn-success">Update Logistics</button>
+              <button type="submit" class="btn btn-success">Update Activity</button>
             </div>
           </form>
         </div>
@@ -55,34 +71,22 @@
 
     <div class="col-md-6">
       <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h2 class="h5 mb-0">Activity Gallery</h2>
-          <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#photoModal">
-            <i class="fa-solid fa-camera"></i> Add Picture
-          </button>
+        <div class="card-header">
+          <h2 class="h5 mb-0">Photo</h2>
         </div>
         <div class="card-body">
-          <div class="row g-3">
-            <% if @the_activity.photos.any? %>
-              <% @the_activity.photos.each do |photo| %>
-                <div class="col-6">
-                  <div class="card h-100 shadow-sm">
-                    <img src="<%= photo.image %>" class="card-img-top" alt="Gallery image" style="height: 150px; object-fit: cover;">
-                    <% if photo.caption.present? %>
-                      <div class="card-footer p-1 text-center">
-                        <small class="text-muted"><%= photo.caption %></small>
-                      </div>
-                    <% end %>
-                  </div>
-                </div>
-              <% end %>
-            <% else %>
-              <div class="text-center py-5 border rounded bg-light w-100">
-                <i class="fa-regular fa-image fa-3x text-secondary mb-2"></i>
-                <p class="text-secondary">No pictures yet. Click the button above to add one!</p>
-              </div>
+          <% if @the_activity.picture.present? %>
+            <img src="<%= @the_activity.picture.url %>" class="img-fluid rounded w-100"
+                 style="object-fit:cover;max-height:300px;" alt="<%= @the_activity.name %>">
+            <% if @the_activity.picture_caption.present? %>
+              <p class="text-muted small mt-2 mb-0"><%= @the_activity.picture_caption %></p>
             <% end %>
-          </div>
+          <% else %>
+            <div class="text-center py-5 bg-light rounded">
+              <i class="fa-regular fa-image fa-3x text-secondary mb-2"></i>
+              <p class="text-secondary mb-0">No photo yet. Add one using the edit form.</p>
+            </div>
+          <% end %>
         </div>
       </div>
     </div>
@@ -159,35 +163,6 @@
           <% end %>
         </div>
       </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal fade" id="photoModal" tabindex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <form action="/insert_photo" method="post" enctype="multipart/form-data">
-        <div class="modal-header">
-          <h5 class="modal-title" id="photoModalLabel">Upload New Photo</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-             <label for="image_box" class="form-label fw-bold">Choose Image</label>
-             <input type="file" id="image_box" name="query_image" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label for="caption_box" class="form-label fw-bold">Caption</label>
-            <input type="text" id="caption_box" name="query_caption" placeholder="Describe this photo..." class="form-control">
-          </div>
-          
-          <input type="hidden" name="query_activity_id" value="<%= @the_activity.id %>">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Upload to Gallery</button>
-        </div>
-      </form>
     </div>
   </div>
 </div>

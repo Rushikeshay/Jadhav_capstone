@@ -15,12 +15,8 @@ class JournalsController < ApplicationController
     # 1. Gather Text Context
     activity_context = @the_day.activities.map { |a| "#{a.name} at #{a.address}. Note: #{a.notes}" }.join(", ")
     
-    # 2. Gather Image URLs (CarrierWave/Cloudinary Fix)
-    images = []
-    @the_day.activities.each do |a|
-      images << a.picture.url if a.picture.present?
-      a.photos.each { |p| images << p.image.url if p.image.present? }
-    end
+    # 2. Gather Image URLs
+    images = @the_day.activities.select { |a| a.picture.present? }.map { |a| a.picture.url }
 
     # 3. Call AI
     chat = AI::Chat.new

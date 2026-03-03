@@ -79,12 +79,12 @@
   <% if @the_trip.days.any? %>
     <div class="row g-3 mb-5">
       <% @the_trip.days.sort_by { |d| d.date || Date.new(0) }.each do |day| %>
-        <% first_pic = day.activities.find { |a| a.picture.present? }&.picture %>
+        <% first_pic = day.activities.find { |a| a.picture.present? }&.picture&.url %>
         <div id="<%= dom_id(day) %>" class="col-6 col-md-4">
           <a href="/days/<%= day.id %>" class="text-decoration-none">
             <div class="card h-100 border-0 shadow-sm overflow-hidden">
               <% if first_pic %>
-                <img src="<%= first_pic.url %>" alt="day photo"
+                <img src="<%= first_pic %>" alt="day photo"
                      class="card-img-top" style="height:120px;object-fit:cover;">
               <% else %>
                 <div class="bg-light d-flex align-items-center justify-content-center"

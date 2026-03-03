@@ -43,11 +43,8 @@
           <% @the_day.activities.each do |activity| %>
             <div class="col-md-6">
               <div class="card h-100 shadow-sm">
-                <% if activity.photos.any? %>
-                  <img src="<%= activity.photos.first.image %>" class="card-img-top"
-                       style="height: 200px; object-fit: cover;" alt="<%= activity.name %>">
-                <% elsif activity.picture.present? %>
-                  <img src="<%= activity.picture %>" class="card-img-top"
+                <% if activity.picture.present? %>
+                  <img src="<%= activity.picture.url %>" class="card-img-top"
                        style="height: 200px; object-fit: cover;" alt="<%= activity.name %>">
                 <% else %>
                   <div class="bg-light text-center py-5 border-bottom">
