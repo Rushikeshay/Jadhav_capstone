@@ -1,35 +1,73 @@
-<div class="container py-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <a href="/trips/<%= @the_day.trip_id %>" class="btn btn-outline-secondary btn-sm">
-      <i class="fa-solid fa-arrow-left"></i> Back to Trip
-    </a>
-    <a href="/delete_day/<%= @the_day.id %>" class="btn btn-outline-danger btn-sm"
-       data-turbo-method="delete"
-       onclick="return confirm('Delete this day?')">
-      <i class="fa-solid fa-trash"></i> Delete Day
+<%# ===== HERO HEADER ===== %>
+<% hero_pic = @the_day.activities.find { |a| a.picture.present? }&.picture&.url %>
+<div class="position-relative mb-4" style="height:200px;overflow:hidden;background:#1a1a2e;">
+  <% if hero_pic %>
+    <img src="<%= hero_pic %>" alt="<%= @the_day.title %>"
+         style="width:100%;height:100%;object-fit:cover;opacity:0.55;">
+  <% else %>
+    <div class="w-100 h-100 d-flex align-items-center justify-content-center">
+      <i class="fa-regular fa-calendar fa-4x text-white opacity-25"></i>
+    </div>
+  <% end %>
+
+  <%# Back button %>
+  <div class="position-absolute top-0 start-0 p-3">
+    <a href="/trips/<%= @the_day.trip_id %>" class="btn btn-sm btn-light bg-white bg-opacity-75">
+      <i class="fa-solid fa-arrow-left me-1"></i>Back to Trip
     </a>
   </div>
 
-  <div class="card shadow-sm mb-4">
-    <div class="card-body">
-      <form action="/modify_day/<%= @the_day.id %>" method="post" class="row g-3 align-items-end">
-        <input type="hidden" name="query_trip_id" value="<%= @the_day.trip_id %>">
-        <div class="col-auto">
-          <label class="form-label fw-bold mb-1">Date</label>
-          <input type="date" name="query_date" class="form-control"
-                 value="<%= @the_day.date&.strftime("%Y-%m-%d") %>" required>
-        </div>
-        <div class="col">
-          <label class="form-label fw-bold mb-1">Title <span class="text-muted fw-normal">(optional)</span></label>
-          <input type="text" name="query_title" class="form-control"
-                 value="<%= @the_day.title %>" placeholder="e.g. Arrival Day, Beach Day...">
-        </div>
-        <div class="col-auto">
-          <button type="submit" class="btn btn-success">
-            <i class="fa-solid fa-floppy-disk"></i> Save
-          </button>
-        </div>
-      </form>
+  <%# Edit + Delete buttons %>
+  <div class="position-absolute top-0 end-0 p-3 d-flex gap-2">
+    <button class="btn btn-sm btn-light bg-white bg-opacity-75"
+            type="button" data-bs-toggle="collapse" data-bs-target="#editDayForm"
+            aria-expanded="false">
+      <i class="fa-solid fa-pen me-1"></i>Edit
+    </button>
+    <a href="/delete_day/<%= @the_day.id %>" class="btn btn-sm btn-danger"
+       data-turbo-method="delete"
+       onclick="return confirm('Delete this day?')">
+      <i class="fa-solid fa-trash"></i>
+    </a>
+  </div>
+
+  <%# Day title + date %>
+  <div class="position-absolute bottom-0 start-0 p-3 text-white">
+    <h1 class="fw-bold mb-0" style="text-shadow:0 1px 4px rgba(0,0,0,.6);">
+      <%= @the_day.title.presence || "Day ##{@the_day.id}" %>
+    </h1>
+    <p class="mb-0 small opacity-75">
+      <i class="fa-regular fa-calendar me-1"></i><%= @the_day.date&.strftime("%B %-d, %Y") %>
+    </p>
+  </div>
+</div>
+
+<div class="container pb-5">
+  <%# Collapsed edit form %>
+  <div class="collapse mb-4" id="editDayForm">
+    <div class="card border-0 shadow-sm">
+      <div class="card-body py-3">
+        <form action="/modify_day/<%= @the_day.id %>" method="post" class="row g-2 align-items-end">
+          <input type="hidden" name="query_trip_id" value="<%= @the_day.trip_id %>">
+          <div class="col-auto">
+            <label class="form-label small fw-semibold mb-1">Date</label>
+            <input type="date" name="query_date" class="form-control form-control-sm"
+                   value="<%= @the_day.date&.strftime("%Y-%m-%d") %>" required>
+          </div>
+          <div class="col">
+            <label class="form-label small fw-semibold mb-1">
+              Title <span class="text-muted fw-normal">(optional)</span>
+            </label>
+            <input type="text" name="query_title" class="form-control form-control-sm"
+                   value="<%= @the_day.title %>" placeholder="e.g. Arrival Day, Beach Day...">
+          </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-success btn-sm">
+              <i class="fa-solid fa-floppy-disk me-1"></i>Save
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -127,7 +165,7 @@
 
       <%# Journal Section %>
       <% existing_journal = Journal.find_by(day_id: @the_day.id, user_id: current_user.id) %>
-      
+
       <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
           <h3 class="h5 mb-0">Daily Reflection</h3>
@@ -155,10 +193,10 @@
 
             <form action="/modify_journal/<%= existing_journal.id %>" method="post">
               <input type="hidden" name="query_day_id" value="<%= existing_journal.day_id %>">
-              
+
               <div class="mb-3">
-                <textarea name="query_response" id="journal_response" 
-                          class="form-control" rows="8" 
+                <textarea name="query_response" id="journal_response"
+                          class="form-control" rows="8"
                           placeholder="Your thoughts..."><%= existing_journal.response %></textarea>
               </div>
 
