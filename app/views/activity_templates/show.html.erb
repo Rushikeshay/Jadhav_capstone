@@ -69,32 +69,6 @@
           </form>
         </div>
       </div>
-
-      <a href="/delete_activity/<%= @the_activity.id %>" class="text-danger small" data-turbo-method="delete" onclick="return confirm('Delete this activity?')">
-        Delete Activity
-      </a>
-    </div>
-
-    <div class="col-md-6">
-      <div class="card shadow-sm">
-        <div class="card-header">
-          <h2 class="h5 mb-0">Photo</h2>
-        </div>
-        <div class="card-body">
-          <% if @the_activity.picture.present? %>
-            <img src="<%= @the_activity.picture.url %>" class="img-fluid rounded w-100"
-                 style="object-fit:cover;max-height:300px;" alt="<%= @the_activity.name %>">
-            <% if @the_activity.picture_caption.present? %>
-              <p class="text-muted small mt-2 mb-0"><%= @the_activity.picture_caption %></p>
-            <% end %>
-          <% else %>
-            <div class="text-center py-5 bg-light rounded">
-              <i class="fa-regular fa-image fa-3x text-secondary mb-2"></i>
-              <p class="text-secondary mb-0">No photo yet. Add one using the edit form.</p>
-            </div>
-          <% end %>
-        </div>
-      </div>
     </div>
   </div>
 </div>
