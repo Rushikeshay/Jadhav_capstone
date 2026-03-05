@@ -212,7 +212,32 @@
       <% else %>
         <p class="text-muted small">No journal entries yet.</p>
       <% end %>
+      <%# Stats Widget %>
+      <div class="card shadow-sm mt-4">
+        <div class="card-header bg-light">
+          <h3 class="h5 mb-0"><i class="fa-solid fa-chart-simple me-2 text-primary"></i>Your Journey So Far...</h3>
+        </div>
+        <div class="card-body">
+          <div class="row text-center g-3">
+            <div class="col-6">
+              <div class="p-3 rounded bg-primary bg-opacity-10">
+                <div class="fw-bold text-primary" style="font-size:2.5rem;line-height:1;">
+                  <%= Membership.where(user_id: current_user.id).count %>
+                </div>
+                <div class="text-muted small mt-1">Trips Taken</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="p-3 rounded bg-success bg-opacity-10">
+                <div class="fw-bold text-success" style="font-size:2.5rem;line-height:1;">
+                  <%= Journal.where(user_id: current_user.id).count %>
+                </div>
+                <div class="text-muted small mt-1">Journal Entries</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-
   </div>
 </div>
