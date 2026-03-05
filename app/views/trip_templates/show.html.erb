@@ -9,13 +9,20 @@
     </div>
   <% end %>
 
-  <%# Back + Delete buttons %>
+  <%# Back button %>
   <div class="position-absolute top-0 start-0 p-3">
     <a href="/trips" class="btn btn-sm btn-light bg-white bg-opacity-75">
       <i class="fa-solid fa-arrow-left me-1"></i>All Trips
     </a>
   </div>
-  <div class="position-absolute top-0 end-0 p-3">
+
+  <%# Edit + Delete buttons %>
+  <div class="position-absolute top-0 end-0 p-3 d-flex gap-2">
+    <button class="btn btn-sm btn-light bg-white bg-opacity-75"
+            type="button" data-bs-toggle="collapse" data-bs-target="#editTripForm"
+            aria-expanded="false">
+      <i class="fa-solid fa-pen me-1"></i>Edit
+    </button>
     <a href="/delete_trip/<%= @the_trip.id %>" class="btn btn-sm btn-danger"
        data-turbo-method="delete"
        onclick="return confirm('Delete this trip and all its days?')">
@@ -115,14 +122,8 @@
     </div>
   <% end %>
 
-  <%# ===== EDIT TRIP (collapsed, bottom) ===== %>
-  <hr>
-  <button class="btn btn-link btn-sm text-muted text-decoration-none p-0 mb-2"
-          type="button" data-bs-toggle="collapse" data-bs-target="#editTripForm">
-    <i class="fa-solid fa-pen me-1"></i>Edit trip details
-  </button>
-
-  <div class="collapse" id="editTripForm">
+  <%# ===== EDIT TRIP (collapsed) ===== %>
+  <div class="collapse mb-4" id="editTripForm">
     <div class="card border-0 shadow-sm mt-2">
       <div class="card-body">
         <% if @the_trip.cover_image.present? %>
