@@ -1,7 +1,13 @@
 <div class="container py-4">
-  <nav class="mb-4">
+  <nav class="mb-4 d-flex justify-content-between">
     <a href="/days/<%= @the_activity.day_id %>" class="btn btn-outline-secondary btn-sm">
       <i class="fa-solid fa-arrow-left"></i> Back to Day Plan
+    </a>
+    <a href="/delete_activity/<%= @the_activity.id %>"
+      class="btn btn-sm btn-danger"
+      data-turbo-method="delete"
+      onclick="return confirm('Delete this activity?')">
+      <i class="fa-solid fa-trash"></i>
     </a>
   </nav>
 
