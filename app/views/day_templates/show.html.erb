@@ -183,7 +183,11 @@
           <h3 class="h5 mb-0">Daily Reflection</h3>
         </div>
         <div class="card-body">
-          <p class="text-muted small mb-3">Let AI analyze your day and help you reflect.</p>
+          <p class="text-muted small mb-3">Invite AI to generate reflection questions to spark your day’s entry. The questions are only a doorway—once you tap “Save Entry,” only your response is kept, not the prompts. 
+          </p>
+          <p class="text-muted small mb-3">
+          Let the questions guide you. Let your words hold the memory. Save what matters.
+          </p>
           <form action="/insert_journal" method="post">
             <input type="hidden" name="query_day_id" value="<%= @the_day.id %>">
             <div class="d-grid">
@@ -223,11 +227,6 @@
             <span class="small text-muted fw-semibold">Journal Entry</span>
           </div>
           <div class="card-body">
-            <ul class="ps-3 mb-3 small text-muted">
-              <% journal.ai_generated_questions.split("|").each do |q| %>
-                <li class="mb-1"><em><%= q %></em></li>
-              <% end %>
-            </ul>
             <p class="mb-0 small" style="white-space:pre-wrap;"><%= journal.response %></p>
           </div>
         </div>
