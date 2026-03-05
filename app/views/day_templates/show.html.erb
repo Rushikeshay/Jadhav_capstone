@@ -1,5 +1,5 @@
 <%# ===== HERO HEADER ===== %>
-<% hero_pic = @the_day.activities.find { |a| a.picture.present? }&.picture&.url %>
+<% hero_pic = @the_day.cover_image.present? ? @the_day.cover_image.url : @the_day.activities.find { |a| a.picture.present? }&.picture&.url %>
 <div class="position-relative mb-4" style="height:200px;overflow:hidden;background:#1a1a2e;">
   <% if hero_pic %>
     <img src="<%= hero_pic %>" alt="<%= @the_day.title %>"
@@ -47,7 +47,7 @@
   <div class="collapse mb-4" id="editDayForm">
     <div class="card border-0 shadow-sm">
       <div class="card-body py-3">
-        <form action="/modify_day/<%= @the_day.id %>" method="post" class="row g-2 align-items-end">
+        <form action="/modify_day/<%= @the_day.id %>" method="post" enctype="multipart/form-data" class="row g-2 align-items-end">
           <input type="hidden" name="query_trip_id" value="<%= @the_day.trip_id %>">
           <div class="col-auto">
             <label class="form-label small fw-semibold mb-1">Date</label>
@@ -60,6 +60,16 @@
             </label>
             <input type="text" name="query_title" class="form-control form-control-sm"
                    value="<%= @the_day.title %>" placeholder="e.g. Arrival Day, Beach Day...">
+          </div>
+          <div class="col-12">
+            <label class="form-label small fw-semibold mb-1">
+              Hero photo <span class="text-muted fw-normal">(overrides auto-selected activity photo)</span>
+            </label>
+            <% if @the_day.cover_image.present? %>
+              <img src="<%= @the_day.cover_image.url %>" class="d-block rounded mb-1"
+                   style="height:60px;object-fit:cover;width:100%;" alt="Current hero">
+            <% end %>
+            <input type="file" name="query_cover_image" class="form-control form-control-sm" accept="image/*">
           </div>
           <div class="col-auto">
             <button type="submit" class="btn btn-success btn-sm">
@@ -164,58 +174,65 @@
       </div>
 
       <%# Journal Section %>
-      <% existing_journal = Journal.find_by(day_id: @the_day.id, user_id: current_user.id) %>
+      <% day_journals = Journal.where(day_id: @the_day.id, user_id: current_user.id).order(:created_at) %>
+      <% pending_journal = day_journals.find { |j| j.response.blank? } %>
+      <% completed_journals = day_journals.select { |j| j.response.present? } %>
 
       <div class="card shadow-sm">
         <div class="card-header bg-primary text-white">
           <h3 class="h5 mb-0">Daily Reflection</h3>
         </div>
         <div class="card-body">
-          <% if existing_journal.nil? %>
-            <p class="text-muted small">Let AI analyze your day and help you reflect.</p>
-            <form action="/insert_journal" method="post">
+          <p class="text-muted small mb-3">Let AI analyze your day and help you reflect.</p>
+          <form action="/insert_journal" method="post">
+            <input type="hidden" name="query_day_id" value="<%= @the_day.id %>">
+            <div class="d-grid">
+              <button class="btn btn-outline-primary btn-sm">
+                <i class="fa-solid fa-robot me-2"></i>Generate Questions
+              </button>
+            </div>
+          </form>
+
+          <% if pending_journal %>
+            <hr class="my-3">
+            <p class="fw-bold mb-2 small text-primary">Reflect on these:</p>
+            <ul class="ps-3 mb-3 small">
+              <% pending_journal.ai_generated_questions.split("|").each do |question| %>
+                <li class="mb-2"><em><%= question %></em></li>
+              <% end %>
+            </ul>
+            <form action="/modify_journal/<%= pending_journal.id %>" method="post">
               <input type="hidden" name="query_day_id" value="<%= @the_day.id %>">
-              <div class="d-grid">
-                <button class="btn btn-outline-primary">
-                  <i class="fa-solid fa-robot me-2"></i>Generate Questions
-                </button>
-              </div>
-            </form>
-          <% else %>
-            <div class="mb-3">
-              <p class="fw-bold mb-2 small text-primary uppercase">Reflect on these:</p>
-              <ul class="ps-3 mb-3 small">
-                <% existing_journal.ai_generated_questions.split("|").each do |question| %>
-                  <li class="mb-2"><em><%= question %></em></li>
-                <% end %>
-              </ul>
-            </div>
-
-            <form action="/modify_journal/<%= existing_journal.id %>" method="post">
-              <input type="hidden" name="query_day_id" value="<%= existing_journal.day_id %>">
-
               <div class="mb-3">
-                <textarea name="query_response" id="journal_response"
-                          class="form-control" rows="8"
-                          placeholder="Your thoughts..."><%= existing_journal.response %></textarea>
+                <textarea name="query_response" class="form-control" rows="6"
+                          placeholder="Your thoughts..."></textarea>
               </div>
-
               <div class="d-grid">
-                <button class="btn btn-success">Save Entry</button>
+                <button class="btn btn-success btn-sm">Save Entry</button>
               </div>
             </form>
-
-            <div class="mt-3 text-center">
-              <a href="/delete_journal/<%= existing_journal.id %>"
-                 class="text-danger small text-decoration-none"
-                 data-turbo-method="delete"
-                 onclick="return confirm('Clear questions and entry?')">
-                <i class="fa-solid fa-rotate-left me-1"></i>Reset Journal
-              </a>
-            </div>
           <% end %>
         </div>
       </div>
+
+      <%# Completed journal entry boxes %>
+      <% completed_journals.reverse_each do |journal| %>
+        <div class="card shadow-sm mt-3">
+          <div class="card-header bg-light py-2 d-flex align-items-center gap-2">
+            <i class="fa-regular fa-pen-to-square text-muted"></i>
+            <span class="small text-muted fw-semibold">Journal Entry</span>
+          </div>
+          <div class="card-body">
+            <ul class="ps-3 mb-3 small text-muted">
+              <% journal.ai_generated_questions.split("|").each do |q| %>
+                <li class="mb-1"><em><%= q %></em></li>
+              <% end %>
+            </ul>
+            <p class="mb-0 small" style="white-space:pre-wrap;"><%= journal.response %></p>
+          </div>
+        </div>
+      <% end %>
+
     </div>
   </div>
 </div>

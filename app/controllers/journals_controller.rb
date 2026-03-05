@@ -11,7 +11,10 @@ class JournalsController < ApplicationController
 
   def create
     @the_day = Day.find(params.fetch("query_day_id"))
-    
+
+    # Clear any pending (unanswered) journals so there's always at most one active at a time
+    Journal.where(day_id: @the_day.id, user_id: current_user.id).where(response: [nil, ""]).destroy_all
+
     # 1. Gather Text Context
     activity_context = @the_day.activities.map { |a| "#{a.name} at #{a.address}. Note: #{a.notes}" }.join(", ")
     

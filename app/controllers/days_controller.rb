@@ -38,6 +38,7 @@ class DaysController < ApplicationController
     the_day.date = params.fetch("query_date")
     the_day.title = params.fetch("query_title", "")
     the_day.trip_id = params.fetch("query_trip_id")
+    the_day.cover_image = params[:query_cover_image] if params[:query_cover_image].present?
 
     if the_day.valid?
       the_day.save
