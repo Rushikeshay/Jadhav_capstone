@@ -8,6 +8,8 @@ class UsersController < ApplicationController
     @followers = @the_user.followers
     @is_own_profile = (current_user.id == @the_user.id)
     @my_follow = current_user.follow_relationships.find_by(followed_id: @the_user.id)
+    @user_journals = @is_own_profile ? current_user.journals.includes(day: :trip).order(created_at: :desc) : []
+    @user_trips = @the_user.trips.order(created_at: :desc)
     render template: "user_templates/show"
   end
 

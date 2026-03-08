@@ -1,15 +1,20 @@
-<div class="container-fluid py-4">
+<div class="container py-4">
   <div class="row g-4">
 
-    <%# ===== LEFT: My Trips ===== %>
+    <%# ===== LEFT: My Trips + My Journals ===== %>
     <div class="col-md-3">
-      <h2 class="h5 fw-bold mb-3">
-        <i class="fa-solid fa-suitcase-rolling me-2 text-primary"></i>My Trips
-      </h2>
+
+      <%# My Trips — max 5 %>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 fw-bold mb-0">
+          <i class="fa-solid fa-suitcase-rolling me-2 text-primary"></i>My Trips
+        </h2>
+        <a href="/profiles/<%= current_user.id %>" class="text-primary small text-decoration-none">See all</a>
+      </div>
 
       <% if @my_trips.any? %>
-        <div class="d-flex flex-column gap-2">
-          <% @my_trips.each do |a_trip| %>
+        <div class="d-flex flex-column gap-2 mb-4">
+          <% @my_trips.first(5).each do |a_trip| %>
             <a href="/trips/<%= a_trip.id %>" class="text-decoration-none">
               <div class="card shadow-sm border-0 overflow-hidden">
                 <% if a_trip.cover_image.present? %>
@@ -34,8 +39,47 @@
           <% end %>
         </div>
       <% else %>
-        <p class="text-muted small">No trips yet — start one!</p>
+        <p class="text-muted small mb-4">No trips yet — start one!</p>
       <% end %>
+
+      <%# My Journal Entries — max 5 %>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 fw-bold mb-0">
+          <i class="fa-solid fa-book me-2 text-primary"></i>My Journals
+        </h2>
+        <a href="/profiles/<%= current_user.id %>" class="text-primary small text-decoration-none">See all</a>
+      </div>
+
+      <% if @my_journals.any? %>
+        <div class="d-flex flex-column gap-2">
+          <% @my_journals.each do |journal| %>
+            <a href="/journals/<%= journal.id %>" class="text-decoration-none">
+              <div class="card shadow-sm border-0">
+                <div class="card-body py-2 px-3">
+                  <p class="mb-0 fw-semibold small text-dark text-truncate">
+                    <%= journal.day&.trip&.title.presence || "Trip" %>
+                    &middot;
+                    <%= journal.day&.date&.strftime("%b %d, %Y") || "Day ##{journal.day_id}" %>
+                  </p>
+                  <% if journal.response.present? %>
+                    <p class="mb-0 text-muted" style="font-size:0.7rem;">
+                      <%= truncate(journal.response, length: 80) %>
+                    </p>
+                  <% else %>
+                    <p class="mb-0 text-muted fst-italic" style="font-size:0.7rem;">No response yet</p>
+                  <% end %>
+                  <p class="mb-0 text-muted" style="font-size:0.65rem;">
+                    <%= time_ago_in_words(journal.created_at) %> ago
+                  </p>
+                </div>
+              </div>
+            </a>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="text-muted small">No journal entries yet.</p>
+      <% end %>
+
     </div>
 
     <%# ===== CENTER: Social Feed ===== %>
@@ -53,14 +97,14 @@
             <% my_like = activity.likes.find { |l| l.user_id == current_user.id } %>
 
             <div id="<%= dom_id(activity) %>" class="card shadow-sm border-0 overflow-hidden">
-              <%# Activity picture %>
+              <%# Activity picture — 4:5 ratio, cropped to fit %>
               <% if activity.picture.present? %>
                 <img src="<%= activity.picture.url %>" alt="<%= activity.name %>"
-                     class="card-img-top" style="max-height:420px;object-fit:cover;">
+                     style="width:100%;aspect-ratio:4/5;object-fit:cover;">
               <% end %>
 
               <div class="card-body pb-2">
-                <%# Owner row %>
+                <%# Owner row — links to their profile %>
                 <a href="/profiles/<%= owner&.id %>" class="text-decoration-none text-dark d-flex align-items-center mb-2">
                   <% if owner&.[](:avatar)&.present? %>
                     <img src="<%= owner.avatar.url %>" class="rounded-circle me-2"
@@ -154,13 +198,15 @@
       <% end %>
     </div>
 
-    <%# ===== RIGHT: Start New Adventure ===== %>
+    <%# ===== RIGHT: New Adventure + Stats + Copyright ===== %>
     <div class="col-md-5">
+
+      <%# New Adventure — top %>
       <h2 class="h5 fw-bold mb-3">
         <i class="fa-solid fa-plus-circle me-2 text-primary"></i>New Adventure
       </h2>
 
-      <div class="card shadow-sm border-0">
+      <div class="card shadow-sm border-0 mb-4">
         <div class="card-body">
           <form action="/insert_trip" method="post" enctype="multipart/form-data">
             <div class="mb-2">
@@ -178,42 +224,8 @@
         </div>
       </div>
 
-      <%# ===== My Journal Entries ===== %>
-      <h2 class="h5 fw-bold mb-3 mt-4">
-        <i class="fa-solid fa-book me-2 text-primary"></i>My Journal Entries
-      </h2>
-
-      <% if @my_journals.any? %>
-        <div class="d-flex flex-column gap-2">
-          <% @my_journals.each do |journal| %>
-            <a href="/journals/<%= journal.id %>" class="text-decoration-none">
-              <div class="card shadow-sm border-0">
-                <div class="card-body py-2 px-3">
-                  <p class="mb-0 fw-semibold small text-dark text-truncate">
-                    <%= journal.day&.trip&.title.presence || "Trip" %>
-                    &middot;
-                    <%= journal.day&.date&.strftime("%b %d, %Y") || "Day ##{journal.day_id}" %>
-                  </p>
-                  <% if journal.response.present? %>
-                    <p class="mb-0 text-muted" style="font-size:0.7rem;">
-                      <%= truncate(journal.response, length: 80) %>
-                    </p>
-                  <% else %>
-                    <p class="mb-0 text-muted fst-italic" style="font-size:0.7rem;">No response yet</p>
-                  <% end %>
-                  <p class="mb-0 text-muted" style="font-size:0.65rem;">
-                    <%= time_ago_in_words(journal.created_at) %> ago
-                  </p>
-                </div>
-              </div>
-            </a>
-          <% end %>
-        </div>
-      <% else %>
-        <p class="text-muted small">No journal entries yet.</p>
-      <% end %>
-      <%# Stats Widget %>
-      <div class="card shadow-sm mt-4">
+      <%# Journey So Far — below %>
+      <div class="card shadow-sm mb-4">
         <div class="card-header bg-light">
           <h3 class="h5 mb-0"><i class="fa-solid fa-chart-simple me-2 text-primary"></i>Your Journey So Far...</h3>
         </div>
@@ -238,6 +250,13 @@
           </div>
         </div>
       </div>
+
+      <%# Copyright %>
+      <p class="text-muted small text-center mt-2">
+        &copy; <%= Date.today.year %> Travel Journal. All rights reserved.
+      </p>
+
     </div>
+
   </div>
 </div>

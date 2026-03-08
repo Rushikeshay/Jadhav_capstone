@@ -4,7 +4,7 @@ class TripsController < ApplicationController
     @my_journals = current_user.journals
                                .includes({ :day => :trip })
                                .order({ :created_at => :desc })
-                               .limit(10)
+                               .limit(5)
 
     followed_ids = current_user.following.pluck(:id)
     if followed_ids.any?
