@@ -137,7 +137,6 @@ GEM
     debug_inspector (1.2.0)
     dev_toolbar (2.1.0)
       rails (>= 7.0)
-    device (0.0.0)
     devise (4.9.4)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -520,7 +519,7 @@ DEPENDENCIES
   cloudinary
   debug
   dev_toolbar (~> 2.1.0)
-  device
+  devise
   dotenv
   draft_generators (~> 0.0.5)
   geocoder
