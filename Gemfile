@@ -21,6 +21,7 @@ gem "carrierwave"
 gem "cloudinary"
 gem "geocoder"
 gem "ai-chat"
+gem "device"
 
 group :development, :test do
   gem "debug", platforms: %i[mri windows], require: "debug/prelude" # Ruby debugger
