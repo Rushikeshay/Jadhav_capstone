@@ -1,6 +1,8 @@
 class JournalsController < ApplicationController
   def index
-    @list_of_journals = Journal.where(user_id: current_user.id).order({ :created_at => :desc })
+    @list_of_journals = Journal.where(user_id: current_user.id)
+                               .joins(:day)
+                               .order("days.date ASC")
     render({ :template => "journal_templates/index" })
   end
 
