@@ -1,0 +1,16 @@
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('1', '2025-09-25', '1', '2026-02-23 21:47:52 UTC', '2026-03-08 20:58:44 UTC', 'Downtown day', NULL);
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('3', '2022-03-28', '2', '2026-02-24 18:23:12 UTC', '2026-03-05 04:16:18 UTC', 'The never-ending stair ', 'image/upload/v1772684178/y4m4uaxkynoxpvudhtzq.webp');
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('4', '2022-03-27', '2', '2026-02-26 21:20:58 UTC', '2026-02-26 21:26:41 UTC', 'Sand dunes', NULL);
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('5', '2021-10-17', '3', '2026-02-26 21:35:09 UTC', '2026-02-26 21:35:09 UTC', 'Fort day', NULL);
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('7', '2026-03-15', '4', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'Arrival & Shinjuku', NULL);
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('8', '2026-03-16', '4', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'Asakusa & Akihabara', NULL);
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('9', '2026-03-17', '4', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'Harajuku & Shibuya', NULL);
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('10', '2026-04-10', '5', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'Eiffel Tower & The Louvre', NULL);
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('11', '2026-04-11', '5', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'Montmartre Morning', NULL);
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('12', '2026-02-20', '6', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'Manhattan Highlights', NULL);
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('13', '2026-02-21', '6', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'Brooklyn Bridge Day', NULL);
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('14', '2026-01-15', '7', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'Deep Dish & Architecture', NULL);
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('15', '2026-03-01', '8', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'Ubud Temples', NULL);
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('16', '2026-03-02', '8', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'Seminyak Beach Day', NULL);
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('17', '2026-03-03', '8', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'Sacred Monkey Forest', NULL);
+INSERT INTO public.days (id, date, trip_id, created_at, updated_at, title, cover_image) VALUES ('18', '2026-02-20', '9', '2026-03-05 05:09:25 UTC', '2026-03-05 05:09:25 UTC', 'Downtown', NULL);

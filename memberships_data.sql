@@ -1,0 +1,9 @@
+INSERT INTO public.memberships (id, user_id, trip_id, created_at, updated_at, role) VALUES ('1', '1', '1', '2026-02-26 21:10:16 UTC', '2026-02-26 21:10:16 UTC', 'owner');
+INSERT INTO public.memberships (id, user_id, trip_id, created_at, updated_at, role) VALUES ('2', '1', '2', '2026-02-26 21:10:16 UTC', '2026-02-26 21:10:16 UTC', 'owner');
+INSERT INTO public.memberships (id, user_id, trip_id, created_at, updated_at, role) VALUES ('3', '2', '3', '2026-02-26 21:34:37 UTC', '2026-02-26 21:34:37 UTC', 'owner');
+INSERT INTO public.memberships (id, user_id, trip_id, created_at, updated_at, role) VALUES ('4', '3', '4', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'owner');
+INSERT INTO public.memberships (id, user_id, trip_id, created_at, updated_at, role) VALUES ('5', '3', '5', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'owner');
+INSERT INTO public.memberships (id, user_id, trip_id, created_at, updated_at, role) VALUES ('6', '4', '6', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'owner');
+INSERT INTO public.memberships (id, user_id, trip_id, created_at, updated_at, role) VALUES ('7', '4', '7', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'owner');
+INSERT INTO public.memberships (id, user_id, trip_id, created_at, updated_at, role) VALUES ('8', '5', '8', '2026-03-02 22:21:16 UTC', '2026-03-02 22:21:16 UTC', 'owner');
+INSERT INTO public.memberships (id, user_id, trip_id, created_at, updated_at, role) VALUES ('9', '1', '9', '2026-03-05 05:08:38 UTC', '2026-03-05 05:08:38 UTC', 'owner');
