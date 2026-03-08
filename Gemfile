@@ -22,6 +22,7 @@ gem "cloudinary"
 gem "geocoder"
 gem "ai-chat"
 gem "devise"
+gem "simple_form"
 
 group :development, :test do
   gem "debug", platforms: %i[mri windows], require: "debug/prelude" # Ruby debugger
