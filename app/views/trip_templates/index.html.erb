@@ -39,7 +39,7 @@
     </div>
 
     <%# ===== CENTER: Social Feed ===== %>
-    <div class="col-md-6">
+    <div class="col-md-4">
       <h2 class="h5 fw-bold mb-3">
         <i class="fa-solid fa-images me-2 text-primary"></i>Travel Feed
       </h2>
@@ -56,13 +56,13 @@
               <%# Activity picture %>
               <% if activity.picture.present? %>
                 <img src="<%= activity.picture.url %>" alt="<%= activity.name %>"
-                     class="card-img-top" style="max-height:320px;object-fit:cover;">
+                     class="card-img-top" style="max-height:420px;object-fit:cover;">
               <% end %>
 
               <div class="card-body pb-2">
                 <%# Owner row %>
-                <div class="d-flex align-items-center mb-2">
-                  <% if owner&.avatar&.url.present? %>
+                <a href="/profiles/<%= owner&.id %>" class="text-decoration-none text-dark d-flex align-items-center mb-2">
+                  <% if owner&.[](:avatar)&.present? %>
                     <img src="<%= owner.avatar.url %>" class="rounded-circle me-2"
                          style="width:32px;height:32px;object-fit:cover;" alt="avatar">
                   <% else %>
@@ -74,7 +74,7 @@
                   <span class="fw-semibold small">
                     <%= owner&.username.presence || owner&.first_name.presence || owner&.email || "Traveler" %>
                   </span>
-                </div>
+                </a>
 
                 <%# Location / trip / date meta %>
                 <p class="text-muted small mb-2">
@@ -155,7 +155,7 @@
     </div>
 
     <%# ===== RIGHT: Start New Adventure ===== %>
-    <div class="col-md-3">
+    <div class="col-md-5">
       <h2 class="h5 fw-bold mb-3">
         <i class="fa-solid fa-plus-circle me-2 text-primary"></i>New Adventure
       </h2>

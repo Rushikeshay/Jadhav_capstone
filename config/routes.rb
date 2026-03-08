@@ -112,6 +112,11 @@ Rails.application.routes.draw do
   # Routes for comments:
   post("/insert_comment",          { :controller => "comments", :action => "create" })
   delete("/delete_comment/:path_id",  { :controller => "comments", :action => "destroy" })
+
+  # User profile page
+  get("/profiles/:path_id", { :controller => "users", :action => "show" })
+  post("/update_avatar",    { :controller => "users", :action => "update_avatar" })
+
   devise_for :users
   # This is a blank app! Pick your first screen, build out the RCAV, and go from there. E.g.:
   # get("/your_first_screen", { :controller => "pages", :action => "first" })

@@ -1,0 +1,174 @@
+<div class="container py-4" style="max-width:680px;">
+
+  <%# ===== Profile Header ===== %>
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body d-flex align-items-center gap-4 py-4">
+      <%# Avatar %>
+      <% if @the_user[:avatar].present? %>
+        <img src="<%= @the_user.avatar.url %>" class="rounded-circle flex-shrink-0"
+             style="width:80px;height:80px;object-fit:cover;" alt="avatar">
+      <% else %>
+        <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center flex-shrink-0"
+             style="width:80px;height:80px;">
+          <i class="fa-solid fa-user fa-2x text-white"></i>
+        </div>
+      <% end %>
+
+      <%# Name + stats %>
+      <div class="flex-grow-1">
+        <h1 class="h4 fw-bold mb-1">
+          <%= @the_user.username.presence || @the_user.first_name.presence || @the_user.email %>
+        </h1>
+        <% if @the_user.username.present? && @the_user.first_name.present? %>
+          <p class="text-muted small mb-2"><%= @the_user.first_name %> <%= @the_user.last_name %></p>
+        <% end %>
+        <div class="d-flex gap-4 text-center">
+          <div>
+            <div class="fw-bold"><%= @the_user.trips.count %></div>
+            <div class="text-muted small">Trips</div>
+          </div>
+          <div>
+            <div class="fw-bold"><%= @user_activities.count %></div>
+            <div class="text-muted small">Posts</div>
+          </div>
+          <div>
+            <div class="fw-bold"><%= @followers.count %></div>
+            <div class="text-muted small">Followers</div>
+          </div>
+        </div>
+      </div>
+
+      <%# Action button %>
+      <div class="flex-shrink-0">
+        <% if @is_own_profile %>
+          <a href="/users/edit" class="btn btn-outline-secondary btn-sm">
+            <i class="fa-solid fa-pen me-1"></i>Edit Profile
+          </a>
+        <% elsif @my_follow %>
+          <a href="/unfollow_user/<%= @my_follow.id %>" class="btn btn-outline-secondary btn-sm"
+             data-turbo-method="delete">
+            <i class="fa-solid fa-user-minus me-1"></i>Unfollow
+          </a>
+        <% else %>
+          <form action="/follow_user" method="post" class="d-inline">
+            <input type="hidden" name="query_followed_id" value="<%= @the_user.id %>">
+            <button type="submit" class="btn btn-primary btn-sm">
+              <i class="fa-solid fa-user-plus me-1"></i>Follow
+            </button>
+          </form>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <%# ===== Posts ===== %>
+  <h2 class="h5 fw-bold mb-3">
+    <i class="fa-solid fa-images me-2 text-primary"></i>Posts
+  </h2>
+
+  <% if @user_activities.any? %>
+    <div class="d-flex flex-column gap-3 mb-5">
+      <% @user_activities.each do |activity| %>
+        <% my_like = activity.likes.find { |l| l.user_id == current_user.id } %>
+        <div class="card shadow-sm border-0 overflow-hidden">
+          <% if activity.picture.present? %>
+            <img src="<%= activity.picture.url %>" alt="<%= activity.name %>"
+                 class="card-img-top" style="max-height:420px;object-fit:cover;">
+          <% end %>
+          <div class="card-body pb-2">
+            <%# Location / trip / date %>
+            <p class="text-muted small mb-2">
+              <i class="fa-solid fa-location-dot me-1"></i><strong><%= activity.name %></strong>
+              &nbsp;&middot;&nbsp;
+              <i class="fa-solid fa-plane me-1"></i><%= activity.day.trip.title.presence || "Trip ##{activity.day.trip_id}" %>
+              &nbsp;&middot;&nbsp;
+              <i class="fa-regular fa-calendar me-1"></i><%= activity.day.date&.strftime("%b %d, %Y") %>
+            </p>
+
+            <%# Caption / notes %>
+            <% if activity.picture_caption.present? %>
+              <p class="mb-2 small"><%= activity.picture_caption %></p>
+            <% elsif activity.notes.present? %>
+              <p class="mb-2 small text-muted"><%= truncate(activity.notes, length: 120) %></p>
+            <% end %>
+
+            <%# Like + comment counts %>
+            <div class="d-flex align-items-center gap-3">
+              <% if my_like %>
+                <a href="/unlike_activity/<%= my_like.id %>" class="text-danger text-decoration-none small"
+                   data-turbo-method="delete">
+                  <i class="fa-solid fa-heart me-1"></i><%= activity.likes.size %>
+                </a>
+              <% else %>
+                <form action="/like_activity" method="post" class="d-inline m-0">
+                  <input type="hidden" name="query_activity_id" value="<%= activity.id %>">
+                  <button type="submit" class="btn btn-link p-0 text-muted text-decoration-none small">
+                    <i class="fa-regular fa-heart me-1"></i><%= activity.likes.size %>
+                  </button>
+                </form>
+              <% end %>
+              <span class="text-muted small">
+                <i class="fa-regular fa-comment me-1"></i><%= activity.comments.size %>
+              </span>
+            </div>
+
+            <%# Comments preview %>
+            <% visible_comments = activity.comments.sort_by(&:created_at).first(3) %>
+            <% if visible_comments.any? %>
+              <div class="mt-2">
+                <% visible_comments.each do |comment| %>
+                  <div class="small mb-1">
+                    <span class="fw-semibold">
+                      <%= comment.user&.username.presence || comment.user&.first_name.presence || "User" %>
+                    </span>
+                    <span class="ms-1"><%= comment.body %></span>
+                  </div>
+                <% end %>
+                <% if activity.comments.size > 3 %>
+                  <span class="text-muted small">and <%= activity.comments.size - 3 %> more…</span>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="text-center py-4 text-muted mb-5">
+      <i class="fa-solid fa-camera fa-3x mb-3 opacity-25"></i>
+      <p>No posts yet.</p>
+    </div>
+  <% end %>
+
+  <%# ===== Followers ===== %>
+  <h2 class="h5 fw-bold mb-3">
+    <i class="fa-solid fa-users me-2 text-primary"></i>Followers
+    <span class="text-muted fw-normal fs-6">(<%= @followers.count %>)</span>
+  </h2>
+
+  <% if @followers.any? %>
+    <div class="d-flex flex-wrap gap-3">
+      <% @followers.each do |follower| %>
+        <a href="/profiles/<%= follower.id %>" class="text-decoration-none text-dark">
+          <div class="d-flex flex-column align-items-center" style="width:70px;">
+            <% if follower[:avatar].present? %>
+              <img src="<%= follower.avatar.url %>" class="rounded-circle mb-1"
+                   style="width:48px;height:48px;object-fit:cover;" alt="avatar">
+            <% else %>
+              <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center mb-1"
+                   style="width:48px;height:48px;">
+                <i class="fa-solid fa-user text-white"></i>
+              </div>
+            <% end %>
+            <span class="small text-truncate w-100 text-center" style="font-size:0.7rem;">
+              <%= follower.username.presence || follower.first_name.presence || follower.email.split("@").first %>
+            </span>
+          </div>
+        </a>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-muted small">No followers yet.</p>
+  <% end %>
+
+</div>
