@@ -1,6 +1,6 @@
 class MembershipsController < ApplicationController
   def index
-    matching_memberships = Membership.all
+    matching_memberships = Membership.where(user_id: current_user.id)
 
     @list_of_memberships = matching_memberships.order({ :created_at => :desc })
 

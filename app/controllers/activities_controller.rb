@@ -1,19 +1,16 @@
 class ActivitiesController < ApplicationController
   def index
-    matching_activities = Activity.all
-
-    @list_of_activities = matching_activities.order({ :created_at => :desc })
+    # Only show activities belonging to the current user's trips
+    @list_of_activities = Activity.joins(day: :trip)
+                                  .where(trips: { id: current_user.trip_ids })
+                                  .order({ :created_at => :desc })
 
     render({ :template => "activity_templates/index" })
   end
 
   def show
     the_id = params.fetch("path_id")
-
-    matching_activities = Activity.where({ :id => the_id })
-
-    @the_activity = matching_activities.at(0)
-
+    @the_activity = Activity.where({ :id => the_id }).at(0)
     render({ :template => "activity_templates/show" })
   end
 
@@ -40,6 +37,11 @@ class ActivitiesController < ApplicationController
   def update
     the_id = params.fetch("path_id")
     the_activity = Activity.where({ :id => the_id }).at(0)
+    trip_id = the_activity.day.trip_id
+
+    unless Membership.exists?(user_id: current_user.id, trip_id: trip_id, role: "owner")
+      redirect_to("/days/#{the_activity.day_id}", { :alert => "You don't have permission to edit that activity." }) and return
+    end
 
     the_activity.name = params.fetch("query_name")
     the_activity.picture = params.fetch("query_picture", the_activity.picture)
@@ -61,9 +63,14 @@ class ActivitiesController < ApplicationController
   def destroy
     the_id = params.fetch("path_id")
     the_activity = Activity.where({ :id => the_id }).at(0)
+    day_id = the_activity.day_id
+    trip_id = the_activity.day.trip_id
+
+    unless Membership.exists?(user_id: current_user.id, trip_id: trip_id, role: "owner")
+      redirect_to("/days/#{day_id}", { :alert => "You don't have permission to delete that activity." }) and return
+    end
 
     the_activity.destroy
-
-    redirect_to("/activities", { :notice => "Activity deleted successfully." })
+    redirect_to("/days/#{day_id}", { :notice => "Activity deleted successfully." })
   end
 end

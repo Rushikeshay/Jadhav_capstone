@@ -56,6 +56,10 @@ class TripsController < ApplicationController
     the_id = params.fetch("path_id")
     the_trip = Trip.where({ :id => the_id }).at(0)
 
+    unless Membership.exists?(user_id: current_user.id, trip_id: the_trip.id, role: "owner")
+      redirect_to("/trips", { :alert => "You don't have permission to edit that trip." }) and return
+    end
+
     the_trip.title = params.fetch("query_title")
     the_trip.cover_image = params[:cover_image] if params[:cover_image].present?
 
@@ -70,6 +74,10 @@ class TripsController < ApplicationController
   def destroy
     the_id = params.fetch("path_id")
     the_trip = Trip.where({ :id => the_id }).at(0)
+
+    unless Membership.exists?(user_id: current_user.id, trip_id: the_trip.id, role: "owner")
+      redirect_to("/trips", { :alert => "You don't have permission to delete that trip." }) and return
+    end
 
     the_trip.destroy
 
