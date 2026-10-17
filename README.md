@@ -34,11 +34,6 @@ The app combines structured trip tracking with AI-powered reflections to help us
 
 This project was built to explore full-stack web development with Ruby on Rails while integrating external APIs to enhance user experience. The goal was to create a meaningful travel journaling platform that blends social features with AI-assisted reflection.
 
----
-
-## Live App  
-
-🔗 [Visit here](https://gondan-diaries.onrender.com)
 
 ---
 
